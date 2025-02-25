@@ -5,6 +5,7 @@
 - обновить менеджер пакетов `python -m pip install --upgrade pip`
 - установить зависимости - `pip install -r requirements.txt`
 - создать в той же главной папке проекта, что и venv файл `.env` и поместите туда DJANGO_SECRET_KEY (запросить у сокомандников)
+- запуск `python manage.py runserver`, когда вы находитесь в папке django-проекта `mse1h2025_imitate` (***ЧЕРЕЗ ПОДЧЁРКИВАНИЕ***)
 
 # При деплое  
 Убрать `Debug = True` из `mse1h2025_imitate/mse1h2025_imitate/setting.py`

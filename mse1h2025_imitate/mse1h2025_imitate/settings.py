@@ -11,18 +11,19 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from os.path import join as path_join
 from dotenv import dotenv_values
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # https://blog.gitguardian.com/how-to-handle-secrets-in-python/
-SECRET_KEY = dotenv_values("../../.env")["DJANGO_SECRET_KEY"]
+# print(open(path_join(BASE_DIR.parent, ".env"), encoding="utf-8", mode="r").read())
+SECRET_KEY = dotenv_values(path_join(BASE_DIR.parent, ".env"))["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
