@@ -1,14 +1,14 @@
 version: '3.8'
 
 services:
-  backend:
-    #todo дописать сборку/запуск джанго проекта mse1h2025_imitate (все поля что ниже + настройка взаимодействия с БД - и тут, и в самом проекте)
-    image:
-    build:
-    depends_on:
-      db:
-        condition: service_healthy
-    enviroment:
+  #todo дописать сборку/запуск джанго проекта mse1h2025_imitate (все поля что ниже + настройка взаимодействия с БД - и тут, и в самом проекте)
+  # backend:
+    # image:
+    # build:
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+    # enviroment:
   db:
     image: postgres:latest
     container_name: db
