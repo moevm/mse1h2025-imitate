@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    #todo
+    #todo дописать сборку/запуск джанго проекта mse1h2025_imitate (все поля что ниже + настройка взаимодействия с БД - и тут, и в самом проекте)
     image:
     build:
     depends_on:
