@@ -5,7 +5,7 @@
 - активировать виртуальное окружение (`venv/Scripts/activate` или `venv/bin/activate`)
 - обновить менеджер пакетов `python -m pip install --upgrade pip`
 - установить зависимости - `pip install -r requirements.txt`
-- создать в той же главной папке проекта, что и venv файл `.env` и поместите туда все креды (запросить у сокомандников) (DJANGO_SECRET_KEY - генерируется джанго при создании проекта, будет передан командой после сдачи проекта, DB_NAME, DB_USER, DB_PASSWORD - создаются для БД самостоятельно)
+- создать в той же главной папке проекта, что и venv файл `.env` и поместите туда все креды (запросить у сокомандников) (DJANGO_SECRET_KEY - генерируется джанго при создании проекта, либо в терминале - `python manage.py shell`, `from django.core.management import utils`, `utils.get_random_secret_key()`; DB_NAME, DB_USER, DB_PASSWORD - создаются для БД самостоятельно)
 - запуск `python manage.py runserver`, когда вы находитесь в папке django-проекта `mse1h2025_imitate` (***ЧЕРЕЗ ПОДЧЁРКИВАНИЕ***)
 
 # При деплое  
