@@ -1,0 +1,10 @@
+/.github
+/.idea
+/.env
+/.pgdata
+/venv
+/mse1h2025_imitate/backend/__pycache__
+/mse1h2025_imitate/backend/migrations/__pycache__
+/mse1h2025_imitate/mse1h2025_imitate/__pycache__
+/mse1h2025_imitate/users_manager/__pycache__
+/mse1h2025_imitate/users_manager/migrations/__pycache__
