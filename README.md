@@ -41,8 +41,10 @@ mse1h2025-imitate/              директория проекта (через 
 │       ├── models.py
 │       ├── tests.py
 │       └── views.py
+├── venv/                       виртуальное окружение
+├── .env                        файл с информацией окружения
+├── .gitignore
+├── docker-compose.yaml
 ├── README.md
-├── requirements.txt            зависимости
-├── .env                        файл с информацией
-└── venv/                       виртуальное окружение
+└── requirements.txt            зависимости библиотек python
 ```
