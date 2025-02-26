@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    #todo
+    image:
+    build:
+    depends_on:
+      db:
+        condition: service_healthy
+    enviroment:
+  db:
+    image: postgres:latest
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:  #todo: переписать на другую директорию (какую кстати)
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "6000:5432"
+
+volumes:
+  postgres_data:
+    driver: local
