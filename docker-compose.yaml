@@ -1,14 +1,22 @@
 version: '3.8'
 
 services:
-  #todo дописать сборку/запуск джанго проекта mse1h2025_imitate (все поля что ниже + настройка взаимодействия с БД - и тут, и в самом проекте)
-  # backend:
-    # image:
-    # build:
-    # depends_on:
-    #   db:
-    #     condition: service_healthy
-    # enviroment:
+  backend:
+    build: .
+    container_name: django_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+    ports:
+      - "8000:8000"
+
   db:
     image: postgres:latest
     container_name: db
@@ -17,16 +25,10 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:  #todo: переписать на другую директорию (какую кстати)
-      - ./pgdata:/var/lib/postgresql/data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     ports:
-      - "6000:5432"
+      - "5432:5432"
 
 volumes:
-  postgres_data:
-    driver: local
+  pgdata:
