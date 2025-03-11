@@ -35,6 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users_manager.apps.UsersManagerConfig',
     'backend.apps.BackendConfig',
+    'rest_framework',
+    'drf_spectacular',
+    'drf_yasg', 
 ]
 
 MIDDLEWARE = [
@@ -46,6 +49,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Your API',
+    'DESCRIPTION': 'API documentation',
+    'VERSION': '1.0.0',
+}
 
 ROOT_URLCONF = 'mse1h2025_imitate.urls'
 
