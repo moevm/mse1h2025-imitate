@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     'users_manager.apps.UsersManagerConfig',
     'backend.apps.BackendConfig',
     'rest_framework',
+    'rest_framework_simplejwt', 
     'drf_spectacular',
-    'drf_yasg', 
 ]
 
 MIDDLEWARE = [
@@ -48,16 +48,31 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  # Для сессий
+        'rest_framework.authentication.TokenAuthentication',   # Для токенов
+        # Или JWT, если используете djangorestframework-simplejwt
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # Требует аутентификации по умолчанию
+    ],
 }
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Your API',
     'DESCRIPTION': 'API documentation',
     'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 ROOT_URLCONF = 'mse1h2025_imitate.urls'
