@@ -52,42 +52,53 @@ class LoginView(APIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
             user = authenticate(
                 username=serializer.validated_data['username'],
                 password=serializer.validated_data['password']
             )
-            if user:
-                # Проверяем, есть ли у пользователя активные сессии
-                active_sessions = Session.objects.filter(
-                    expire_date__gte=timezone.now(),  # Сессии, которые еще не истекли
-                    session_key__in=user.session_set.values_list('session_key', flat=True)
+
+            if not user:
+                return Response(
+                    {'error': 'Invalid credentials'},
+                    status=status.HTTP_401_UNAUTHORIZED
                 )
 
-                # Ограничиваем количество активных сессий (например, 1 сессия на пользователя)
-                if active_sessions.exists():
-                    # Завершаем все активные сессии пользователя
-                    active_sessions.delete()
-
-                # Создаем новую сессию
-                login(request, user)
-
-                # Проверяем, установилась ли кука sessionid
-                if request.session.session_key:
-                    return Response(
-                        {'message': 'Login successful', 'sessionid': request.session.session_key},
-                        status=status.HTTP_200_OK
-                    )
-                else:
-                    return Response(
-                        {'error': 'Session cookie not set'},
-                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                    )
-            return Response(
-                {'error': 'Invalid credentials'},
-                status=status.HTTP_401_UNAUTHORIZED
+            active_sessions = Session.objects.filter(
+                expire_date__gte=timezone.now(),  # Сессии, которые еще не истекли
+                session_key__in=user.session_set.values_list('session_key', flat=True)
             )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            if active_sessions.exists():
+                active_sessions.delete()
+
+            login(request, user)
+
+            if not request.session.session_key:
+                return Response(
+                    {'error': 'Session cookie not set'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+            return Response(
+                {'message': 'Login successful', 'sessionid': request.session.session_key},
+                status=status.HTTP_200_OK
+            )
+
+        except ObjectDoesNotExist as e:
+            return Response(
+                {'error': 'Session error', 'details': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        except Exception as e:
+            return Response(
+                {'error': 'Login failed', 'details': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class LogoutView(View):
     def get(self, request):
