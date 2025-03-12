@@ -14,26 +14,37 @@ class MyView(APIView):
     def get(self, request):
         return Response({"message": "Hello, world!"})
 
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            try:
-                user = serializer.save()
-                login(request, user)
-                return Response(
-                    {'message': 'User registered and logged in successfully'}, 
-                    status=status.HTTP_201_CREATED
-                )
-            except Exception as e:
-                return Response(
-                    {'error': 'Failed to register user', 'details': str(e)}, 
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = serializer.save()
+
+            login(request, user)
+
+            return Response(
+                {'message': 'User registered and logged in successfully'},
+                status=status.HTTP_201_CREATED
+            )
+
+        except IntegrityError as e:
+            return Response(
+                {'error': 'User registration failed', 'details': 'Username or email already exists.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        except Exception as e:
+            return Response(
+                {'error': 'Failed to register user', 'details': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
