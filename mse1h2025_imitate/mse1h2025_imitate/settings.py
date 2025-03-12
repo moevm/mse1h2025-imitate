@@ -104,8 +104,8 @@ DATABASES = {
         'NAME': config.get("DB_NAME"),
         'USER': config.get("DB_USER"),
         'PASSWORD': config.get("DB_PASSWORD"),
-        'HOST': config.get("DATABASE_HOST", "db"),
-        'PORT': config.get("DATABASE_PORT", "5432"),
+        'HOST': config.get("DATABASE_HOST"),
+        'PORT': config.get("DATABASE_PORT"),
     }
 }
 
