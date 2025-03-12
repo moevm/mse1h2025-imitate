@@ -58,13 +58,12 @@ AUTHENTICATION_BACKENDS = [
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',  # Для сессий
-        'rest_framework.authentication.TokenAuthentication',   # Для токенов
-        # Или JWT, если используете djangorestframework-simplejwt
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',  # Требует аутентификации по умолчанию
+        'rest_framework.permissions.IsAuthenticated',  
     ],
 }
 
