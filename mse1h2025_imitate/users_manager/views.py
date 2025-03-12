@@ -40,35 +40,71 @@ class LoginView(APIView):
     serializer_class = UserLoginSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data) 
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = authenticate(
                 username=serializer.validated_data['username'],
                 password=serializer.validated_data['password']
             )
             if user:
-                login(request, user)
-                return Response(
-                    {'message': 'Login successful'}, 
-                    status=status.HTTP_200_OK
+                # Проверяем, есть ли у пользователя активные сессии
+                active_sessions = Session.objects.filter(
+                    expire_date__gte=timezone.now(),  # Сессии, которые еще не истекли
+                    session_key__in=user.session_set.values_list('session_key', flat=True)
                 )
+
+                # Ограничиваем количество активных сессий (например, 1 сессия на пользователя)
+                if active_sessions.exists():
+                    # Завершаем все активные сессии пользователя
+                    active_sessions.delete()
+
+                # Создаем новую сессию
+                login(request, user)
+
+                # Проверяем, установилась ли кука sessionid
+                if request.session.session_key:
+                    return Response(
+                        {'message': 'Login successful', 'sessionid': request.session.session_key},
+                        status=status.HTTP_200_OK
+                    )
+                else:
+                    return Response(
+                        {'error': 'Session cookie not set'},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
             return Response(
-                {'error': 'Invalid credentials'}, 
+                {'error': 'Invalid credentials'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class LogoutView(View):
+    def get(self, request):
+        return self._handle_logout(request)
+
     def post(self, request):
+        return self._handle_logout(request)
+
+    def _handle_logout(self, request):
         try:
             if not request.user.is_authenticated:
                 raise PermissionDenied("User is not authenticated.")
 
+            if 'sessionid' not in request.COOKIES:
+                raise PermissionDenied("Session ID is missing in cookies.")
+
+            session_key = request.COOKIES['sessionid']
+            try:
+                session = Session.objects.get(session_key=session_key)
+            except Session.DoesNotExist:
+                raise PermissionDenied("Session does not exist.")
+
             logout(request)
 
+            session.delete()
+
             response = JsonResponse({"message": "Successfully logged out."}, status=200)
-            response.delete_cookie('sessionid') 
+            response.delete_cookie('sessionid')
             return response
 
         except PermissionDenied as e:
