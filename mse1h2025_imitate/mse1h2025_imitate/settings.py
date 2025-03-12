@@ -111,8 +111,8 @@ DATABASES = {
 
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',  # Добавьте это
-    'localhost',  # И это, если вы также используете localhost
+    '127.0.0.1',
+    'localhost',
 ]
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

@@ -16,10 +16,10 @@ class MyView(APIView):
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
-    serializer_class = UserSerializer  # Указываем сериализатор
+    serializer_class = UserSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)  # Используем self.serializer_class
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             try:
                 user = serializer.save()
@@ -37,10 +37,10 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
-    serializer_class = UserLoginSerializer  # Указываем сериализатор
+    serializer_class = UserLoginSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)  # Используем self.serializer_class
+        serializer = self.serializer_class(data=request.data) 
         if serializer.is_valid():
             user = authenticate(
                 username=serializer.validated_data['username'],
@@ -61,8 +61,7 @@ class LoginView(APIView):
 
 class LogoutView(View):
     def post(self, request):
-        logout(request)  # Выход пользователя
+        logout(request)
         response = JsonResponse({"message": "Successfully logged out."})
-        # Очистка куки сессии
         response.delete_cookie('sessionid')
         return response
