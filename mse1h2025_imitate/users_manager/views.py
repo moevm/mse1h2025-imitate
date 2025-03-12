@@ -1,6 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from django.contrib.auth import logout
+from django.http import JsonResponse
+from django.views import View
 from rest_framework import status
 from django.contrib.auth import authenticate, login
 from .serializers import UserSerializer, UserLoginSerializer
@@ -54,3 +57,12 @@ class LoginView(APIView):
                 status=status.HTTP_401_UNAUTHORIZED
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutView(View):
+    def post(self, request):
+        logout(request)  # Выход пользователя
+        response = JsonResponse({"message": "Successfully logged out."})
+        # Очистка куки сессии
+        response.delete_cookie('sessionid')
+        return response
