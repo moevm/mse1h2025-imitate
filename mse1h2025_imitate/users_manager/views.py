@@ -82,9 +82,6 @@ class LogoutView(View):
     def get(self, request):
         return self._handle_logout(request)
 
-    def post(self, request):
-        return self._handle_logout(request)
-
     def _handle_logout(self, request):
         try:
             if not request.user.is_authenticated:
