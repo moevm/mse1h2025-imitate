@@ -61,7 +61,18 @@ class LoginView(APIView):
 
 class LogoutView(View):
     def post(self, request):
-        logout(request)
-        response = JsonResponse({"message": "Successfully logged out."})
-        response.delete_cookie('sessionid')
-        return response
+        try:
+            if not request.user.is_authenticated:
+                raise PermissionDenied("User is not authenticated.")
+
+            logout(request)
+
+            response = JsonResponse({"message": "Successfully logged out."}, status=200)
+            response.delete_cookie('sessionid') 
+            return response
+
+        except PermissionDenied as e:
+            return JsonResponse({"error": str(e)}, status=403)
+
+        except Exception as e:
+            return JsonResponse({"error": "An error occurred during logout."}, status=500)
