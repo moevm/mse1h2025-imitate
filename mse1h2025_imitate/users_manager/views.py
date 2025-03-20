@@ -38,28 +38,16 @@ class RegisterFrontView(View):
                 context = loads(request.GET['context_for_front'])
             except JSONDecodeError:
                 context = {}  # Если не удалось декодировать, используем пустой контекст
-
         return render(request, path_join(TEMPLATES_DIR, "register.html"), context)
-
-    # def return_error(self, request, error_message):
-    #     context = {
-    #         'error_message': error_message
-    #     }
-    #     return render(request, path_join(TEMPLATES_DIR, "register.html"), context)
 
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
-    front_view = RegisterFrontView()
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
-            # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            # return self.front_view.return_error(request, serializer.errors)
-
-
             errors = serializer.errors
             # todo: добавить тут нормальное взятие ошибки или try except хотя бы!!!
             context = {
