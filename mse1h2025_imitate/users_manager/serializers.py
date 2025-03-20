@@ -1,12 +1,14 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
+    @staticmethod
     def validate_username(self, value):
         if len(value) < 3:
             raise serializers.ValidationError("Username must be at least 3 characters long.")
@@ -14,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("A user with that username already exists.")
         return value
 
+    @staticmethod
     def validate_email(self, value):
         if not value:
             raise serializers.ValidationError("Email is required.")
@@ -21,6 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("A user with that email already exists.")
         return value
 
+    @staticmethod
     def validate_password(self, value):
         if len(value) < 8:
             raise serializers.ValidationError("Password must be at least 8 characters long.")
@@ -33,6 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
 
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()

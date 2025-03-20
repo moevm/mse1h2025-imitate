@@ -12,6 +12,9 @@ from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
+from pathlib import Path
+from os.path import join as path_join
+from django.shortcuts import render
 
 
 class MyView(APIView):
@@ -139,3 +142,14 @@ class LogoutView(View):
 
         except Exception as e:
             return JsonResponse({"error": "An error occurred during logout."}, status=500)
+
+
+TEMPLATES_DIR = path_join(Path(__file__).resolve().parent.parent, "templates", "users_manager")
+
+
+class RegisterFrontView(View):
+    def get(self, request):
+        context = {
+            'key': 'value'
+        }
+        return render(request, path_join(TEMPLATES_DIR, "register.html"), context)

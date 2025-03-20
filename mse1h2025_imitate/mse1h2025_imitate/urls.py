@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from users_manager.views import RegisterView, LoginView, LogoutView
+from users_manager.views import RegisterView, LoginView, LogoutView, RegisterFrontView
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -44,4 +44,5 @@ urlpatterns = [
     path('api/users/register', RegisterView.as_view(), name='register'),
     path('api/users/login', LoginView.as_view(), name='login'),
     path('api/users/logout', LogoutView.as_view(), name='logout'),
+    path('register', RegisterFrontView.as_view(), name='register-front'),
 ]
