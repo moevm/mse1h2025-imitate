@@ -14,7 +14,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from pathlib import Path
 from os.path import join as path_join
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from json import loads, JSONDecodeError
+from json import dumps as json_dumps
+
+TEMPLATES_DIR = path_join(Path(__file__).resolve().parent.parent, "templates", "users_manager")
 
 
 class MyView(APIView):
@@ -24,14 +28,49 @@ class MyView(APIView):
         return Response({"message": "Hello, world!"})
 
 
+class RegisterFrontView(View):
+    def get(self, request):
+        # Получаем контекст из GET-параметров
+        context = {}
+        if 'context_for_front' in request.GET:
+            try:
+                # Декодируем JSON-строку в словарь
+                context = loads(request.GET['context_for_front'])
+            except JSONDecodeError:
+                context = {}  # Если не удалось декодировать, используем пустой контекст
+
+        return render(request, path_join(TEMPLATES_DIR, "register.html"), context)
+
+    # def return_error(self, request, error_message):
+    #     context = {
+    #         'error_message': error_message
+    #     }
+    #     return render(request, path_join(TEMPLATES_DIR, "register.html"), context)
+
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
+    front_view = RegisterFrontView()
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # return self.front_view.return_error(request, serializer.errors)
+
+
+            errors = serializer.errors
+            # todo: добавить тут нормальное взятие ошибки или try except хотя бы!!!
+            context = {
+                'error_message': str(errors[list(errors.keys())[0]][0])
+            }
+
+            # Сериализуем контекст в JSON-строку
+            context_json = json_dumps(context)
+
+            # Перенаправляем с контекстом
+            return redirect(f'/register?context_for_front={context_json}')
 
         try:
             user = serializer.save()
@@ -142,14 +181,3 @@ class LogoutView(View):
 
         except Exception as e:
             return JsonResponse({"error": "An error occurred during logout."}, status=500)
-
-
-TEMPLATES_DIR = path_join(Path(__file__).resolve().parent.parent, "templates", "users_manager")
-
-
-class RegisterFrontView(View):
-    def get(self, request):
-        context = {
-            'key': 'value'
-        }
-        return render(request, path_join(TEMPLATES_DIR, "register.html"), context)
