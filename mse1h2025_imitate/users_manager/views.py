@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 
+
 class MyView(APIView):
     permission_classes = [AllowAny]
 
@@ -50,6 +51,7 @@ class RegisterView(APIView):
                 {'error': 'Failed to register user', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -104,6 +106,7 @@ class LoginView(APIView):
                 {'error': 'Login failed', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 class LogoutView(View):
     def get(self, request):
