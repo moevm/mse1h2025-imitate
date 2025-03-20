@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <style>
+        body {
+            background-color: #222;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            margin-top: 100px;
+        }
+        .form-box {
+            background: #444;
+            padding: 20px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        input {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid white;
+            color: white;
+            outline: none;
+        }
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .link {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .top-menu {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: #333;
+        }
+        .top-menu a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-menu">
+        <a href="/">На главную</a>
+        <a href="/profile">Личный кабинет</a>
+    </div>
+    <div class="container">
+        <div class="form-box">
+            <form method="post" action="/api/users/register">
+                <input type="text" name="username" placeholder="Логин" required>
+                <input type="password" name="password" placeholder="Пароль" required>
+                <button type="submit" class="btn">Зарегистрироваться</button>
+            </form>
+            <p>или</p>
+            <a href="/login" class="link">Войти</a>
+        </div>
+    </div>
+    {% if error_message %}
+        <div class="error">
+            <p> {{ error_message }} </p>
+        </div>
+    {% endif %}
+</body>
+</html>
