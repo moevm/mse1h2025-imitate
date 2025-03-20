@@ -7,6 +7,11 @@ from django.views import View
 from rest_framework import status
 from django.contrib.auth import authenticate, login
 from .serializers import UserSerializer, UserLoginSerializer
+from django.core.exceptions import PermissionDenied
+from django.contrib.sessions.models import Session
+from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 
 class MyView(APIView):
     permission_classes = [AllowAny]
@@ -68,8 +73,8 @@ class LoginView(APIView):
                 )
 
             active_sessions = Session.objects.filter(
-                expire_date__gte=timezone.now(),  # Сессии, которые еще не истекли
-                session_key__in=user.session_set.values_list('session_key', flat=True)
+                expire_date__gte=timezone.now(),
+                session_data__contains=f'"auth_user_id":{user.id}'
             )
 
             if active_sessions.exists():
