@@ -1,25 +1,6 @@
 version: '3.8'
-services:
-  backend:
-    build: .
-    container_name: django_backend
-    env_file:
-      - .env
-    depends_on:
-      - db
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
-    environment:
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DATABASE_HOST: ${DATABASE_HOST}
-      DATABASE_PORT: ${DATABASE_PORT}
-    ports:
-      - "8000:8000" 
 
+services:
   db:
     image: postgres:latest
     container_name: db
@@ -30,8 +11,36 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
     ports:
       - "5432:5432"
 
+  backend:
+    build: .
+    container_name: django_backend
+    env_file:
+      - .env
+    depends_on:
+      - db
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DATABASE_HOST: db  # Имя сервиса в сети
+      DATABASE_PORT: 5432
+    networks:
+      - app-network
+    ports:
+      - "8000:8000"
+
 volumes:
   pgdata:
+
+networks:
+  app-network:
+    driver: bridge
