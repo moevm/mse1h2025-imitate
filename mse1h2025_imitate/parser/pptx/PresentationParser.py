@@ -19,12 +19,13 @@ class PresentationParser:
             PresentationData object
         Raises:
             pptx.exc.PackageNotFoundError - if file does not exists or file with invalid format
-        '''
+        ''' 
         presentation = Presentation(pathToFile)
         topic = PresentationParser.__getTopic(presentation.slides)
         goalAndTasks = PresentationParser.__getGoalAndTasks(presentation.slides)
         author = PresentationParser.__getAuthor(presentation.slides)
-        return PresentationData(topic, goalAndTasks, author)
+        slidesTitles = [PresentationParser.__getSlideTitle(slide) for slide in presentation.slides]
+        return PresentationData(topic, goalAndTasks, author, slidesTitles)
     
     @staticmethod
     def __getTopic(slides: Slides) -> str:
@@ -34,6 +35,8 @@ class PresentationParser:
         Returns:
             str - title or `Not found`
         '''
+        if not slides:
+            return 'Not found'
         return PresentationParser.__getSlideTitle(slides[0])
     
     @staticmethod
@@ -45,6 +48,8 @@ class PresentationParser:
         Returns:
             str - author or `Not found`
         '''
+        if not slides:
+            return 'Not found'
         frontPageText = PresentationParser.__getSlideText(slides[0]).lower()
         leftPointer = frontPageText.find(config.LEFT_AUTHOR_MARK)
         if leftPointer == -1: return 'Not found'
@@ -78,8 +83,9 @@ class PresentationParser:
         Returns:
             str - title or `Not found`
         '''
-        if slide.shapes.title and slide.shapes.title.text.strip() != '': return slide.shapes.title.text
-        return 'Not found'
+        if not slide.shapes or not slide.shapes.title or not slide.shapes.title.text.strip():
+            return 'Not found'
+        return slide.shapes.title.text
     
     @staticmethod
     @utils.deleteSpecialSymbolsFromOutput
@@ -90,6 +96,8 @@ class PresentationParser:
         Returns:
             str - text from slide or empty string
         '''
+        if not slide or not slide.shapes:
+            return 'Not found'
         text_runs = []
         for shape in slide.shapes:
             if not shape.has_text_frame:

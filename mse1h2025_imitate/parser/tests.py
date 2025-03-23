@@ -24,11 +24,15 @@ class PresentationParserTestCase(TestCase):
              'слишком много времени, имеет низкую точность. Цель : автоматизировать '
              'распознавание изображений. Задачи : Задача 1 Задача 2 Задача 3 Задача 4'
             ),
-            'иванов иван иванович, гр. 5381'
+            'иванов иван иванович, гр. 5381',
+            ['Тема дипломной работы', 'Цель и задачи', 'Подробнее о постановке задачи', 'Задача 1',
+             'Задача 2', 'Задача 3', 'Задача 4', 'Заключение', 'Апробация работы', 'Запасные слайды',
+             'Практическая значимость']
         )
+        parsedData = PresentationParser.parsePPTX(os.path.join(BASE_DIR, 'parser', 'test_presentations', 'template.pptx'))
         self.assertEqual(
             data_,
-            PresentationParser.parsePPTX(os.path.join(BASE_DIR, 'parser', 'test_presentations', 'template.pptx'))
+            parsedData
         )
 
     def testPresentationWithoutTopic(self):
