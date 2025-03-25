@@ -35,6 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users_manager.apps.UsersManagerConfig',
     'backend.apps.BackendConfig',
+    'rest_framework',
+    'rest_framework_simplejwt', 
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -45,7 +48,30 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Your API',
+    'DESCRIPTION': 'API documentation',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 
 ROOT_URLCONF = 'mse1h2025_imitate.urls'
 
@@ -77,11 +103,16 @@ DATABASES = {
         'NAME': config.get("DB_NAME"),
         'USER': config.get("DB_USER"),
         'PASSWORD': config.get("DB_PASSWORD"),
-        'HOST': config.get("DATABASE_HOST", "db"),
-        'PORT': config.get("DATABASE_PORT", "5432"),
+        'HOST': config.get("DATABASE_HOST"),
+        'PORT': config.get("DATABASE_PORT"),
     }
 }
 
+
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+]
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -100,6 +131,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+APPEND_SLASH = False
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
