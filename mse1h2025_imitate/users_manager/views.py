@@ -41,6 +41,19 @@ class RegisterFrontView(View):
         return render(request, path_join(TEMPLATES_DIR, "register.html"), context)
 
 
+class LoginFrontView(View):
+    def get(self, request):
+        # Получаем контекст из GET-параметров
+        context = {}
+        if 'context_for_front' in request.GET:
+            try:
+                # Декодируем JSON-строку в словарь
+                context = loads(request.GET['context_for_front'])
+            except JSONDecodeError:
+                context = {}  # Если не удалось декодировать, используем пустой контекст
+        return render(request, path_join(TEMPLATES_DIR, "login.html"), context)
+
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
@@ -49,10 +62,15 @@ class RegisterView(APIView):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             errors = serializer.errors
-            # todo: добавить тут нормальное взятие ошибки или try except хотя бы!!!
-            context = {
-                'error_message': str(errors[list(errors.keys())[0]][0])
-            }
+            # todo: сделать норм except?
+            try:
+                context = {
+                    'error_message': str(errors[list(errors.keys())[0]][0])
+                }
+            except Exception as e:
+                context = {
+                    'error_message': str(errors)
+                }
 
             # Сериализуем контекст в JSON-строку
             context_json = json_dumps(context)
@@ -72,7 +90,7 @@ class RegisterView(APIView):
 
         except IntegrityError as e:
             return Response(
-                {'error': 'User registration failed', 'details': 'Username or email already exists.'},
+                {'error': 'User registration failed', 'details': 'Username already exists.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 

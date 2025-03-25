@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
-    <title>Регистрация</title>
+    <title>Логин</title>
     <link rel="stylesheet" type='text/css' href="{% static 'css/user_manager.css' %}">
 </head>
 <body>
@@ -29,10 +29,10 @@
     </div>
     <div class="container">
         <div class="form-box">
-            <form method="post" action="/api/users/register">
+            <form method="post" action="/api/users/login">
                 <input type="text" name="username" placeholder="Логин" required>
                 <input type="password" name="password" placeholder="Пароль" required>
-                <button type="submit" class="btn">Зарегистрироваться</button>
+                <button type="submit" class="btn">Войти</button>
             </form>
         </div>
     </div>
@@ -40,7 +40,7 @@
         <span class="simple-text">или</span>
     </div>
     <div>
-        <a href="/login" class="link"><span>Войти</span></a>
+        <a href="/register" class="link"><span>Зарегистрироваться</span></a>
     </div>
     {% if error_message %}
         <div class="error">

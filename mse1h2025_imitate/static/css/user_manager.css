@@ -1,0 +1,164 @@
+body {
+    background-color: #383838;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+.container {
+    margin-top: 150px;
+    margin-bottom: 20px; /* Add this line to create space below the container */
+}
+.form-box {
+    background: #717171;
+    padding: 20px;
+    display: inline-block;
+    width: 350px;
+}
+input {
+    display: block;
+    width: 90%;
+    margin: 20px 0;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    color: white;
+    outline: none;
+}
+input::placeholder {
+    color: white;
+    font-size: 20px;
+}
+.btn {
+    background: #3692D2;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 20px 0;
+    cursor: pointer;
+    width: 90%;
+    font-size: 25px;
+}
+.top-menu {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: #434343;
+    align-items: center; /* Center items vertically */
+    text-align: center; /* Center text within each item */
+}
+.btn:hover {
+    background: #2980b9;
+}
+.link {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin: 20px 0 40px;
+}
+.link span {
+    background: #383838;
+    padding: 0 10px;
+}
+.simple-text {
+    color: white;
+    font-size: 20px;
+}
+.link:hover {
+    color: #3692D2;
+}
+.top-menu a {
+    color: white;
+    text-decoration: none;
+}
+.error {
+    font-size: 20px;
+}
+/* Horizontal line with centered text */
+.horizontal-line {
+    position: relative;
+    margin: 20px 0;
+    text-align: center;
+    width: 100%;
+    margin: 20px auto; /* Center the line */
+    width: 350px; /* Match the width of the form box */
+}
+.horizontal-line::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px; /* Thickness of the line */
+    background: white; /* Color of the line */
+    z-index: 1;
+}
+.horizontal-line span {
+    background: #383838; /* Background color of the text */
+    padding: 0 10px; /* Padding around the text */
+    position: relative;
+    z-index: 2; /* Ensure text is above the line */
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* This will center items vertically */
+    gap: 10px;
+}
+
+.square_images{
+    max-width: 50px;
+    height: 50px;
+}
+
+.logo_image{
+    max-width: 150px;
+    height: 50px;
+    margin: 0 auto;
+}
+
+/* Media query for screens with a maximum width of 1200px */
+@media (max-width: 1200px) {
+    .container {
+        margin-top: 100px; /* Adjust top margin */
+    }
+
+    .form-box {
+        width: 80%; /* Make form box responsive */
+        max-width: 350px; /* Keep a maximum width */
+    }
+
+    .top-menu {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        background: #434343;
+        align-items: center; /* Center items vertically */
+        text-align: center; /* Center text within each item */
+    }
+
+    .top-menu .flex-container {
+        justify-content: center; /* Center flex items */
+    }
+
+    .btn {
+        font-size: 20px; /* Adjust button font size */
+    }
+
+    .link {
+        font-size: 18px; /* Adjust link font size */
+    }
+
+    .simple-text {
+        font-size: 18px; /* Adjust simple text font size */
+    }
+
+    .error {
+        font-size: 18px; /* Adjust error message font size */
+    }
+}
+
+@media (max-width: 376px) {
+    /* Add any responsive styles here */
+}
