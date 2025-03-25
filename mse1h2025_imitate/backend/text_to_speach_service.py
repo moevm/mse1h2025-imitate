@@ -12,7 +12,8 @@ class TextToSpeechService:
                 repo_or_dir='snakers4/silero-models',
                 model='silero_tts',
                 language=language,
-                speaker=model_id
+                speaker=model_id,
+                trust_repo=True
             )
         except Exception as e:
             raise Exception(f"Error loading TTS model: {e}")
