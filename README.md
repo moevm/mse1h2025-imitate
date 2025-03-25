@@ -14,6 +14,15 @@
 - Для запуска проекта использовать команду ( docker-compose up --build). В случае ошибок проследить логи в терминале. Выполнять эти операции из корневой директории (там, где лежит .env и docker-compose.yaml).
 - При запуске может возникнуть ошибка следующего характера: на сайте висит ошибка подключения, в логах же при этом все хорошо. В таком случае проблема может быть связана с портом 5432 (порт для db). Для решения следует поменять порт на другой. Сделать это можно в docker-compose.yaml.
 
+## Запуск тестов
+- для запуска тестов после поднятия докеров необходимо аойти в докер бакеда с помощью команды `docker exec -it django_backend bash`
+- запуск тестов производится в директории mse1h2025_imitate/mse1h2025_imitate на одном уровне с директорией tests
+- для запуска всех тестов нужно ввести команду `pytest -v`
+- для запуска тестов регистрации и авторизации `pytest tests/test_registration_and_authorization_api.py -v` 
+- для запуска тестов парсинга презентаций `pytest tests/test_presentation_parser.py -v`
+- для запуска тестов сервиса TTS `pytest tests/test_tts_service.py -v`
+- если необходимо запустить отдельный тест, например test_reg_and_auth_api_must_fail_if_user_not_logged_in в tests/test_registration_and_authorization_api.py, то нужно указать следующую команду `pytest tests/test_registration_and_authorization_api.py -k test_reg_and_auth_api_must_fail_if_user_not_logged_in -v`
+
 # При деплое  
 Убрать `Debug = True` из `mse1h2025_imitate/mse1h2025_imitate/setting.py`
 
