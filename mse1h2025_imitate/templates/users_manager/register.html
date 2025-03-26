@@ -9,25 +9,28 @@
 </head>
 <body>
     <div class="top-menu">
-        <div class="flex-container">
+        <div class="flex-container" id="homepage-container">
             <a href="/">
-                <img src="{% static 'images/homepage.png' %}" alt="Homepage" class="square_images">
+                <img src="{% static 'images/homepage.png' %}" alt="Homepage" class="square-images">
             </a>
             <a href="/">
                 На главную
             </a>
         </div>
-        <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo_image">
-        <div class="flex-container">
+        <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo-image">
+        <div class="flex-container" id="account-container">
             <a href="/profile">
                 Личный кабинет
             </a>
             <a href="/profile">
-                <img src="{% static 'images/account.png' %}" alt="Account" class="square_images">
+                <img src="{% static 'images/account.png' %}" alt="Account" class="square-images">
             </a>
         </div>
+        <a href="/burger_menu" class="burger-menu-button">
+                burger
+        </a>
     </div>
-    <div class="container">
+    <div class="container" id="form-box-container">
         <div class="form-box">
             <form method="post" action="/api/users/register">
                 <input type="text" name="username" placeholder="Логин" required>
@@ -39,7 +42,7 @@
     <div class="horizontal-line">
         <span class="simple-text">или</span>
     </div>
-    <div>
+    <div id="last-button-div">
         <a href="/login" class="link"><span>Войти</span></a>
     </div>
     {% if error_message %}
