@@ -6,13 +6,12 @@
 Авторизация
 {% endblock %}
 
-
 {% block content %}
 <div class="container">
     <div class="form-box">
-        <form method="post" action="/api/users/login">
-            <input type="text" name="username" placeholder="Логин" required>
-            <input type="password" name="password" placeholder="Пароль" required>
+        <form id="login-form">
+            <input type="text" id="username" name="username" placeholder="Логин" required>
+            <input type="password" id="password" name="password" placeholder="Пароль" required>
             <button type="submit" class="btn">Войти</button>
         </form>
     </div>
@@ -23,9 +22,39 @@
 <div>
     <a href="/register" class="link"><span>Зарегистрироваться</span></a>
 </div>
-{% if error_message %}
-    <div class="error">
-        <p> {{ error_message }} </p>
-    </div>
-{% endif %}
+<div id="error-message" class="error" style="display: none;">
+    <p></p>
+</div>
+
+<script>
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Отключаем стандартное поведение формы
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                const errorMessage = data.error || 'Произошла ошибка';
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.style.display = 'block';
+                errorDiv.querySelector('p').textContent = errorMessage;
+            } else {
+                // Успешная авторизация
+                window.location.href = '/'; // Перенаправляем на главную страницу
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+        }
+    });
+</script>
 {% endblock %}
