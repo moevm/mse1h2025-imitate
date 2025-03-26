@@ -129,9 +129,33 @@ input::placeholder {
 }
 
 .logo-image{
-    max-width: 150px;
-    height: 50px;
-    margin: 0 auto;
+    /* max-width: 150px; */
+    height: 60px;
+    margin: 0;
+}
+
+.burger{
+    display: none;
+
+}
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 5px 0;
+}
+
+.nav-list {
+    display: none ;
 }
 
 /* Media query for screens with a maximum width of 1200px */
@@ -176,22 +200,61 @@ input::placeholder {
 }
 
 /* Media query for screens with a maximum width of 376px */
-@media (max-width: 376px) {
+@media (max-width: 652px) {
     #homepage-container, #account-container{
         display: none;
+        flex-direction: column;
+        align-items: center; /* This will center items vertically */
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .burger{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 10px;
+        width: 30%;
+    }
+
+    .nav-toggle {
+        display: block;
+        height: 60px;
+    }
+
+    .nav-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        height: 0;
+        overflow: hidden;
+        width: 100%;
+        min-height: 0;
+    }
+
+    .nav-list.open {
+        height: max-content; /* устанавливаем высоту для раскрытого меню*/
+        padding-bottom: 20px;
+        padding-left: 0px;
+        text-align: left;
+        width: max-content;
+    }
+
+    .header-link{
+        padding: 10px;
     }
 
     .top-menu{
         display: flex;
+        align-items: flex-start;
         justify-content: space-between;
         width: 90%;
         padding: 20px;
     }
 
     .logo-image{
-        max-width: 75px;
-        height: 25px;
-        margin: 0 auto;
+        margin: 0;
     }
 
     #form-box-container{
