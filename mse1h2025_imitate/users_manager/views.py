@@ -62,38 +62,30 @@ class RegisterView(APIView):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             errors = serializer.errors
-            # todo: сделать норм except?
             try:
-                context = {
-                    'error_message': str(errors[list(errors.keys())[0]][0])
-                }
+                error_message = str(errors[list(errors.keys())[0]][0])
+                return Response(
+                    {'error': error_message},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             except Exception as e:
-                context = {
-                    'error_message': str(errors)
-                }
-
-            # Сериализуем контекст в JSON-строку
-            context_json = json_dumps(context)
-
-            # Перенаправляем с контекстом
-            return redirect(f'/register?context_for_front={context_json}')
+                return Response(
+                    {'error': str(errors)},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
         try:
             user = serializer.save()
-
             login(request, user)
-
             return Response(
                 {'message': 'User registered and logged in successfully'},
                 status=status.HTTP_201_CREATED
             )
-
         except IntegrityError as e:
             return Response(
                 {'error': 'User registration failed', 'details': 'Username already exists.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
         except Exception as e:
             return Response(
                 {'error': 'Failed to register user', 'details': str(e)},
