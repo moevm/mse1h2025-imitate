@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Авторизация
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="form-box">
+        <form method="post" action="/api/users/login">
+            <input type="text" name="username" placeholder="Логин" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit" class="btn">Войти</button>
+        </form>
+    </div>
+</div>
+<div class="horizontal-line">
+    <span class="simple-text">или</span>
+</div>
+<div>
+    <a href="/register" class="link"><span>Зарегистрироваться</span></a>
+</div>
+{% if error_message %}
+    <div class="error">
+        <p> {{ error_message }} </p>
+    </div>
+{% endif %}
+{% endblock %}

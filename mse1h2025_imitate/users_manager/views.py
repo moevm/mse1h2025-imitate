@@ -12,12 +12,46 @@ from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
+from pathlib import Path
+from os.path import join as path_join
+from django.shortcuts import render, redirect
+from json import loads, JSONDecodeError
+from json import dumps as json_dumps
+
+TEMPLATES_DIR = path_join(Path(__file__).resolve().parent.parent, "templates", "users_manager")
+
 
 class MyView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
         return Response({"message": "Hello, world!"})
+
+
+class RegisterFrontView(View):
+    def get(self, request):
+        # Получаем контекст из GET-параметров
+        context = {}
+        if 'context_for_front' in request.GET:
+            try:
+                # Декодируем JSON-строку в словарь
+                context = loads(request.GET['context_for_front'])
+            except JSONDecodeError:
+                context = {}  # Если не удалось декодировать, используем пустой контекст
+        return render(request, path_join(TEMPLATES_DIR, "register.html"), context)
+
+
+class LoginFrontView(View):
+    def get(self, request):
+        # Получаем контекст из GET-параметров
+        context = {}
+        if 'context_for_front' in request.GET:
+            try:
+                # Декодируем JSON-строку в словарь
+                context = loads(request.GET['context_for_front'])
+            except JSONDecodeError:
+                context = {}  # Если не удалось декодировать, используем пустой контекст
+        return render(request, path_join(TEMPLATES_DIR, "login.html"), context)
 
 
 class RegisterView(APIView):
@@ -27,7 +61,22 @@ class RegisterView(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            errors = serializer.errors
+            # todo: сделать норм except?
+            try:
+                context = {
+                    'error_message': str(errors[list(errors.keys())[0]][0])
+                }
+            except Exception as e:
+                context = {
+                    'error_message': str(errors)
+                }
+
+            # Сериализуем контекст в JSON-строку
+            context_json = json_dumps(context)
+
+            # Перенаправляем с контекстом
+            return redirect(f'/register?context_for_front={context_json}')
 
         try:
             user = serializer.save()
@@ -41,7 +90,7 @@ class RegisterView(APIView):
 
         except IntegrityError as e:
             return Response(
-                {'error': 'User registration failed', 'details': 'Username or email already exists.'},
+                {'error': 'User registration failed', 'details': 'Username already exists.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -50,6 +99,7 @@ class RegisterView(APIView):
                 {'error': 'Failed to register user', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -104,6 +154,7 @@ class LoginView(APIView):
                 {'error': 'Login failed', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 class LogoutView(View):
     def get(self, request):
