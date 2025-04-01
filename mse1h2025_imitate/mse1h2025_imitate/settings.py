@@ -25,6 +25,7 @@ DEBUG = True
 config = dotenv_values(path_join(BASE_DIR.parent, ".env"))
 SECRET_KEY = config["DJANGO_SECRET_KEY"]
 ALLOWED_HOSTS = ['localhost', '0.0.0.0']
+AUTH_USER_MODEL = 'backend.User'
 
 # Application definition
 
@@ -60,8 +61,8 @@ AUTHENTICATION_BACKENDS = [
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [

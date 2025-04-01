@@ -1,7 +1,7 @@
 from django.db import models
-from models_constants import ON_DELETE_BEHAVIOUR
-from user import User
-from presentation import Presentation
+from .models_constants import ON_DELETE_BEHAVIOUR
+from .user import User
+from .presentation import Presentation
 
 
 class Attempt(models.Model):

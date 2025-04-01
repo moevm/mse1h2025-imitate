@@ -1,6 +1,6 @@
 from django.db import models
-from models_constants import ON_DELETE_BEHAVIOUR
-from user import User
+from .models_constants import ON_DELETE_BEHAVIOUR
+from .user import User
 
 
 class Statistic(models.Model):

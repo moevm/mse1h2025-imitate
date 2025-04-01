@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views import View
 from rest_framework import status
 from django.contrib.auth import authenticate, login
-from .serializers import UserSerializer, UserLoginSerializer
+from users_manager.serializers import UserSerializer, UserLoginSerializer
 from django.core.exceptions import PermissionDenied
 from django.contrib.sessions.models import Session
 from django.utils import timezone

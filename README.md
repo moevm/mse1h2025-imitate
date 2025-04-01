@@ -1,69 +1,104 @@
-# Настройка и запуск
+# Полное руководство по развертыванию проекта MSE1H2025 Imitate
 
-## Общие данные
-- версия python - 3.9
-- создать виртуальное окружение (в главной директории проекта, которая написана ***ЧЕРЕЗ ТИРЕ***: `mse1h2025-imitate`) (`python -m venv venv` или `python3 -m venv venv`)
-- активировать виртуальное окружение (`venv/Scripts/activate` или `venv/bin/activate`)
-- обновить менеджер пакетов `python -m pip install --upgrade pip` (`pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt`)
-- установить зависимости - `pip install -r requirements.txt`
-- создать в той же главной папке проекта, что и venv файл `.env` и поместите туда все креды (запросить у сокомандников) (DJANGO_SECRET_KEY - генерируется джанго при создании проекта, либо в терминале - `python manage.py shell`, `from django.core.management import utils`, `utils.get_random_secret_key()`; DB_NAME, DB_USER, DB_PASSWORD - создаются для БД самостоятельно)
-- запуск `python manage.py runserver`, когда вы находитесь в папке django-проекта `mse1h2025_imitate` (***ЧЕРЕЗ ПОДЧЁРКИВАНИЕ***)
+## Требования
+- Docker и Docker Compose (для Docker-развертывания)
+- Python 3.9 (для локальной разработки без Docker)
 
-## Запуск с учетом docker-compose.yaml
-- Также необходимо создать в корневой директории .env и положить туда данные. Данные заданы отдельно (запросить у сокомандников).
-- Для запуска проекта использовать команду (`docker-compose up --build`). В случае ошибок проследить логи в терминале. Выполнять эти операции из корневой директории (там, где лежит .env и docker-compose.yaml).
-- При запуске может возникнуть ошибка следующего характера: на сайте висит ошибка подключения, в логах же при этом все хорошо. В таком случае проблема может быть связана с портом `5432` (порт для db). Для решения следует поменять порт на другой. Сделать это можно в `docker-compose.yaml`.
+## 1. Настройка окружения
 
-## Запуск тестов
-- для запуска тестов после поднятия докеров необходимо войти в докер бакенда с помощью команды `docker exec -it django_backend bash`
-- запуск тестов производится в директории mse1h2025_imitate/mse1h2025_imitate на одном уровне с директорией tests
-- для запуска всех тестов нужно ввести команду `pytest -v`
-- для запуска тестов регистрации и авторизации `pytest tests/test_registration_and_authorization_api.py -v` 
-- для запуска тестов парсинга презентаций `pytest tests/test_presentation_parser.py -v`
-- для запуска тестов сервиса TTS `pytest tests/test_tts_service.py -v`
-- если необходимо запустить отдельный тест, например test_reg_and_auth_api_must_fail_if_user_not_logged_in в tests/test_registration_and_authorization_api.py, то нужно указать следующую команду `pytest tests/test_registration_and_authorization_api.py -k test_reg_and_auth_api_must_fail_if_user_not_logged_in -v`
-
-# При деплое  
-Убрать `Debug = True` из `mse1h2025_imitate/mse1h2025_imitate/setting.py`
-
-
-
-Итоговая иерархия проекта:
-
+1. Создайте файл `.env` в корне проекта с содержимым:
 ```
-mse1h2025-imitate/              директория проекта (через ТИРЕ)
-├── mse1h2025_imitate/          папка Django-проекта (через ПОДЧЁРКИВАНИЕ)
-│   ├── backend/                приложение для обработки логики
-│   │   ├── __init__.py
-│   │   ├── admin.py
-│   │   ├── apps.py
-│   │   ├── migrations/
-│   │   │   └── __init__.py
-│   │   ├── models.py
-│   │   ├── tests.py
-│   │   └── views.py
-│   ├── manage.py
-│   ├── mse1h2025_imitate/      главное приложение проекта (через ПОДЧЁРКИВАНИЕ)
-│   │   ├── __init__.py
-│   │   ├── asgi.py
-│   │   ├── settings.py
-│   │   ├── urls.py
-│   │   └── wsgi.py
-│   └── users_manager/          приложение для управления пользователями
-│       ├── __init__.py
-│       ├── admin.py
-│       ├── apps.py
-│       ├── migrations/
-│       │   └── __init__.py
-│       ├── models.py
-│       ├── tests.py
-│       └── views.py
-├── venv/                       виртуальное окружение
-├── .dockerignore
-├── .env                        файл с информацией окружения
-├── .gitignore
-├── docker-compose.yaml
-├── Dockerfile
-├── README.md
-└── requirements.txt            зависимости библиотек python
+DJANGO_SECRET_KEY=секретный ключ
+DB_NAME=имя базы данных
+DB_USER=пользователь
+DB_PASSWORD=пароль бд
+DATABASE_HOST=db
+DATABASE_PORT=5432
 ```
+
+2. Для генерации нового Django secret key выполните:
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+## 2. Запуск с помощью Docker (рекомендуемый способ)
+
+1. Соберите и запустите контейнеры:
+```bash
+docker-compose up --build
+```
+
+2. После первого запуска создайте суперпользователя:
+```bash
+docker exec -it django_backend python manage.py createsuperuser
+```
+
+3. Приложение будет доступно по адресу: http://localhost:8000
+
+## 3. Локальная разработка (без Docker)
+
+1. Создайте и активируйте виртуальное окружение:
+```bash
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# Linux/Mac:
+source venv/bin/activate
+```
+
+2. Установите зависимости:
+```bash
+pip install --upgrade pip
+pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
+```
+
+3. Настройте базу данных и запустите сервер:
+```bash
+cd mse1h2025_imitate
+python manage.py migrate
+python manage.py runserver
+```
+
+## 4. Запуск тестов
+
+1. Войдите в контейнер backend:
+```bash
+docker exec -it django_backend bash
+```
+
+2. Запустите тесты (из директории /app/mse1h2025_imitate):
+```bash
+# Все тесты
+pytest -v
+
+# Конкретные тесты:
+pytest tests/test_registration_and_authorization_api.py -v
+pytest tests/test_presentation_parser.py -v
+pytest tests/test_tts_service.py -v
+
+# Конкретный тест:
+pytest tests/test_file.py::TestClass::test_method -v
+```
+
+## 5. Деплой в production
+
+1. Обязательные изменения перед деплоем:
+- В `mse1h2025_imitate/settings.py` установите:
+  ```python
+  DEBUG = False
+  ALLOWED_HOSTS = ['ваш-домен.ru', 'ip-адрес']
+  ```
+
+2. Рекомендации для production:
+- Используйте отдельный файл `docker-compose.prod.yml`
+- Замените `runserver` на Gunicorn/Uvicorn
+- Настройте правильную обработку статических файлов
+- Используйте HTTPS
+- Настройте мониторинг и логирование
+
+## 6. Полезные команды
+
+- Остановка контейнеров: `docker-compose down`
+- Просмотр логов: `docker-compose logs -f`
+- Пересборка без кеша: `docker-compose build --no-cache`
+- Очистка Docker: `docker system prune -a`
