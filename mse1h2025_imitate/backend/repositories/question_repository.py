@@ -1,6 +1,7 @@
 from django.db.models import Q
 from ..models.question import Question
 
+
 class QuestionRepository:
     @staticmethod
     def get_questions_by_keywords_any(keywords):

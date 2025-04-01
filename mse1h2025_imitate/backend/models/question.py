@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Question(models.Model):
     question_text = models.TextField()
     category = models.CharField(max_length=100)
