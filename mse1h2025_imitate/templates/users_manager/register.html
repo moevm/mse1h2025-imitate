@@ -1,16 +1,13 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
-{% block title %}
-Регистрация
-{% endblock %}
-
+{% block title %}Регистрация{% endblock %}
 
 {% block content %}
 <div class="container" id="form-box-container">
     <div class="form-box">
         <form id="register-form">
+            {% csrf_token %}
             <input type="text" id="username" name="username" placeholder="Логин" required>
             <input type="password" id="password" name="password" placeholder="Пароль" required>
             <button type="submit" class="btn">Зарегистрироваться</button>
@@ -29,34 +26,42 @@
 
 <script>
     document.getElementById('register-form').addEventListener('submit', async function(event) {
-        event.preventDefault(); // Отключаем стандартное поведение формы
+        event.preventDefault();
 
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
+        const csrfToken = getCookie('csrftoken');
 
         try {
             const response = await fetch('/api/users/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
                 },
                 body: JSON.stringify({ username, password }),
+                credentials: 'include'
             });
+
+            if (response.status === 403) {
+                window.location.reload();
+                return;
+            }
 
             if (!response.ok) {
                 const data = await response.json();
-                const errorMessage = data.error || 'Произошла ошибка';
                 const errorDiv = document.getElementById('error-message');
                 errorDiv.style.display = 'block';
-                errorDiv.querySelector('p').textContent = errorMessage;
+                errorDiv.querySelector('p').textContent = data.error || 'Ошибка регистрации';
             } else {
-                // Успешная регистрация
-                window.location.href = '/login'; // Перенаправляем на страницу входа
+                window.location.href = '/login';
             }
         } catch (error) {
             console.error('Ошибка:', error);
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.style.display = 'block';
+            errorDiv.querySelector('p').textContent = 'Сетевая ошибка';
         }
     });
 </script>
 {% endblock %}
-

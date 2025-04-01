@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
-
+from django.contrib.auth.hashers import make_password
+from backend.models.user import User
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,8 +11,6 @@ class UserSerializer(serializers.ModelSerializer):
     def validate_username(self, value):
         if len(value) < 3:
             raise serializers.ValidationError("Username must be at least 3 characters long.")
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("A user with that username already exists.")
         return value
 
     def validate_password(self, value):
@@ -26,7 +24,6 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
-
 
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
