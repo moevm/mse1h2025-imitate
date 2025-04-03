@@ -181,6 +181,6 @@ class LogoutView(View):
             return JsonResponse({"error": "An error occurred during logout."}, status=500)
 
 
-class LKView(View):
+class ProfileView(View):
     def get(self, request):
-        return render(request, path_join(TEMPLATES_DIR, "lk.html"))
+        return render(request, path_join(TEMPLATES_DIR, "profile.html"))

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <p>Добро пожаловать, {{ user.username }}!</p>
+{% else %}
+    <p>Пожалуйста, <a href="{% url 'login-front' %}">войдите</a>.</p>
+{% endif %}
+
+{% endblock %}
