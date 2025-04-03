@@ -54,7 +54,7 @@
                 errorDiv.style.display = 'block';
                 errorDiv.querySelector('p').textContent = data.error || 'Ошибка авторизации';
             } else {
-                window.location.href = '/';
+                window.location.href = '/profile';
             }
         } catch (error) {
             console.error('Ошибка:', error);

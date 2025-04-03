@@ -17,6 +17,11 @@ from os.path import join as path_join
 from django.shortcuts import render, redirect
 from json import loads, JSONDecodeError
 from json import dumps as json_dumps
+from backend.repositories.attempt_repository import AttemptRepository
+from backend.repositories.user_repository import UserRepository
+from backend.repositories.presentation_repository import PresentationRepository
+from datetime import datetime
+from random import randint
 
 TEMPLATES_DIR = path_join(Path(__file__).resolve().parent.parent, "templates", "users_manager")
 
@@ -179,3 +184,31 @@ class LogoutView(View):
 
         except Exception as e:
             return JsonResponse({"error": "An error occurred during logout."}, status=500)
+
+
+class ProfileView(View):
+    def get(self, request):
+        user = UserRepository.get_user_by_id(request.user.id)
+        # presentation = PresentationRepository.get_presentations_by_user_id(user)[0]
+        # for i in range(10):
+        #     now1 = datetime.now()
+        #     now2 = datetime.now()
+        #     AttemptRepository.create_attempt(user, presentation, now1, now2, randint(0, 100), True)
+        results = list(AttemptRepository.get_attempts_by_user_id(request.user.id).all())
+        context = {
+            "results": results
+        }
+        return render(request, path_join(TEMPLATES_DIR, "profile.html"), context)
+
+
+"""
+пример создания:
+
+user = UserRepository.get_user_by_id(request.user.id)
+PresentationRepository.create_presentation(user, "Title yo", "Filepath yo")
+now1 = datetime.now()
+now2 = datetime.now()
+presentation = PresentationRepository.get_presentations_by_user_id(user)[0]
+AttemptRepository.create_attempt(user, presentation, now1, now2, randint(0, 100), True)
+
+"""
