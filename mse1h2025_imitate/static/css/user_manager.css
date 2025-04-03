@@ -160,7 +160,20 @@ input::placeholder {
 
 .top-info{
     background: #717171;
+    align-items: center; /* Center items vertically */
+    justify-content: flex-start; /* Выравнивание по горизонтали (по умолчанию) *
+    text-align: center; /* Center text within each item */
 }
+
+.top-info-username{
+    margin-top: 0;
+}
+
+
+
+
+
+
 
 /* Media query for screens with a maximum width of 1200px */
 @media (max-width: 1200px) {
@@ -202,6 +215,11 @@ input::placeholder {
         font-size: 18px; /* Adjust error message font size */
     }
 }
+
+
+
+
+
 
 /* Media query for screens with a maximum width of 376px */
 @media (max-width: 652px) {

@@ -13,4 +13,5 @@ class Attempt(models.Model):
     completed = models.BooleanField()
 
     def __str__(self):
-        return f"{self.start_time} - {self.end_time} {'Completed' if self.completed else 'Not completed'}"
+        # return f"{self.start_time} - {self.end_time} {self.score} {'Completed' if self.completed else 'Not completed'}"
+        return f"{self.score}"
