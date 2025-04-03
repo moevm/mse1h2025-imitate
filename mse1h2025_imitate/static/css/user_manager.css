@@ -158,6 +158,10 @@ input::placeholder {
     display: none ;
 }
 
+.top-info{
+    background: #717171;
+}
+
 /* Media query for screens with a maximum width of 1200px */
 @media (max-width: 1200px) {
     .container {

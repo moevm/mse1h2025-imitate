@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from users_manager.views import RegisterView, LoginView, LogoutView, RegisterFrontView, LoginFrontView
+from users_manager.views import RegisterView, LoginView, LogoutView, RegisterFrontView, LoginFrontView, LKView
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -36,9 +36,11 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+
 def get_csrf_token(request):
     token = get_token(request)
     return JsonResponse({'csrfToken': token})
+
 
 urlpatterns = [
     path('api/schema', SpectacularAPIView.as_view(), name='schema'),
@@ -54,4 +56,5 @@ urlpatterns = [
     path('api/users/logout', LogoutView.as_view(), name='logout'),
     path('register', RegisterFrontView.as_view(), name='register-front'),
     path('login', LoginFrontView.as_view(), name='login-front'),
+    path('lk', LKView.as_view(), name='lk'),
 ]
