@@ -1,6 +1,6 @@
 import pytest
 import torch
-from backend.text_to_speach_service import TextToSpeechService
+from ..graduation_imitator.services.TextToSpeechService import TextToSpeechService
 
 @pytest.fixture(scope='session')
 def tts_service():

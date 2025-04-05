@@ -1,6 +1,6 @@
 # import pytest
-# from mse1h2025_imitate.backend.models.question import Question
-# from mse1h2025_imitate.backend.repositories.question_repository import QuestionRepository
+# from mse1h2025_imitate.graduation_imitator.models.question import Question
+# from mse1h2025_imitate.graduation_imitator.repositories.question_repository import QuestionRepository
 #
 #
 # @pytest.mark.django_db
@@ -20,7 +20,7 @@
 #     )
 #     q3 = Question.objects.create(
 #         question_text="Как работает кэш?",
-#         category="backend",
+#         category="graduation_imitator",
 #         difficulty_level=2,
 #         keywords=["cache", "redis"]
 #     )

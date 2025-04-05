@@ -15,13 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from users_manager.views import RegisterView, LoginView, LogoutView, RegisterFrontView, LoginFrontView
+from graduation_imitator.views.views import *
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -49,9 +50,17 @@ urlpatterns = [
 
     path('api/csrf_token/', get_csrf_token, name='csrf_token'),
 
+
+
     path('api/users/register', RegisterView.as_view(), name='register'),
     path('api/users/login', LoginView.as_view(), name='login'),
     path('api/users/logout', LogoutView.as_view(), name='logout'),
     path('register', RegisterFrontView.as_view(), name='register-front'),
     path('login', LoginFrontView.as_view(), name='login-front'),
+    path('', HomeFrontView.as_view(), name='home'),
+    path('api/start-protection', StartProtectionView.as_view(), name='start-protection'),
+    path('api/get-results', GetResultsView.as_view(), name='get-results'),
+    path('api/get_user_status', UserStatusView.as_view(), name='get-status')
 ]
+
+

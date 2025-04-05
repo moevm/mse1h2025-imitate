@@ -1,6 +1,6 @@
 import pytest
 from rest_framework.test import APIClient
-from backend.models import User
+from graduation_imitate.models import User
 from rest_framework import status
 
 
