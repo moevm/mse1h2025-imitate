@@ -25,7 +25,7 @@ DEBUG = True
 config = dotenv_values(path_join(BASE_DIR.parent, ".env"))
 SECRET_KEY = config["DJANGO_SECRET_KEY"]
 ALLOWED_HOSTS = ['localhost', '0.0.0.0']
-AUTH_USER_MODEL = 'backend.User'
+AUTH_USER_MODEL = 'graduation_imitator.User'
 
 # Application definition
 
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users_manager.apps.UsersManagerConfig',
-    'backend.apps.BackendConfig',
+    'graduation_imitator.apps.BackendConfig',
     'rest_framework',
     'rest_framework_simplejwt', 
     'drf_spectacular',

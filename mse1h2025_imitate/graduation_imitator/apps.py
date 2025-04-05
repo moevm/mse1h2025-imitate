@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class UsersManagerConfig(AppConfig):
+class BackendConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'users_manager'
+    name = 'graduation_imitator'

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
-from backend.models.user import User
+
+from graduation_imitator.models.user import User
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
