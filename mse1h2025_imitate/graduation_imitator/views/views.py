@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views import View
 from rest_framework import status
 from django.contrib.auth import authenticate, login
-from users_manager.serializers import UserSerializer, UserLoginSerializer
+from ..serializers.serializers import UserSerializer, UserLoginSerializer
 from django.core.exceptions import PermissionDenied
 from django.contrib.sessions.models import Session
 from django.utils import timezone
@@ -18,7 +18,7 @@ from django.shortcuts import render, redirect
 from json import loads, JSONDecodeError
 from json import dumps as json_dumps
 
-TEMPLATES_DIR = path_join(Path(__file__).resolve().parent.parent, "templates", "users_manager")
+TEMPLATES_DIR = path_join(Path(__file__).resolve().parent.parent.parent, "templates", "users_manager")
 
 
 class MyView(APIView):
@@ -135,6 +135,7 @@ class LoginView(APIView):
                 status=status.HTTP_200_OK
             )
 
+
         except ObjectDoesNotExist as e:
             return Response(
                 {'error': 'Session error', 'details': str(e)},
@@ -179,3 +180,52 @@ class LogoutView(View):
 
         except Exception as e:
             return JsonResponse({"error": "An error occurred during logout."}, status=500)
+
+
+class HomeFrontView(View):
+    def get(self, request):
+        context = {}
+        if 'context_for_front' in request.GET:
+            try:
+                context = loads(request.GET['context_for_front'])
+            except JSONDecodeError:
+                context = {}
+        return render(request, "home/home.html", context)
+
+class StartProtectionView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        try:
+            # Ваша логика запуска защиты
+            return Response({"message": "Защита началась"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetResultsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        try:
+            results = [
+                {"date": "25 фев 2025 22:45", "score": 100},
+                {"date": "24 фев 2025 19:10", "score": 95},
+            ]
+            return Response({"results": results}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class UserStatusView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return Response({
+                "is_authenticated": True,
+                "username": request.user.username
+            })
+        else:
+            return Response({
+                "is_authenticated": False
+            })
