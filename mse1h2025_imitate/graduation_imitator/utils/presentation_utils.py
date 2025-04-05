@@ -1,5 +1,5 @@
 from typing import List
-from .config import SPECIAL_SYMBOLS
+from mse1h2025_imitate.graduation_imitator.configs.presentation_config import SPECIAL_SYMBOLS
 
 
 def deleteAll(string: str, symbols: List) -> str:

@@ -1,13 +1,12 @@
 from pptx import Presentation
 from pptx.slide import Slides, Slide
-from typing import List
 
-from .PresentationData import PresentationData
-from . import config
-from . import utils
+from ..dto.PresentationData import PresentationData
+from ..configs import presentation_config
+from ..utils import presentation_utils
 
 
-class PresentationParser:
+class PresentationParserService:
     '''Class for parsing PPTX presentations'''
 
     @staticmethod
@@ -21,10 +20,10 @@ class PresentationParser:
             pptx.exc.PackageNotFoundError - if file does not exists or file with invalid format
         ''' 
         presentation = Presentation(pathToFile)
-        topic = PresentationParser.__getTopic(presentation.slides)
-        goalAndTasks = PresentationParser.__getGoalAndTasks(presentation.slides)
-        author = PresentationParser.__getAuthor(presentation.slides)
-        slidesTitles = [PresentationParser.__getSlideTitle(slide) for slide in presentation.slides]
+        topic = PresentationParserService.__getTopic(presentation.slides)
+        goalAndTasks = PresentationParserService.__getGoalAndTasks(presentation.slides)
+        author = PresentationParserService.__getAuthor(presentation.slides)
+        slidesTitles = [PresentationParserService.__getSlideTitle(slide) for slide in presentation.slides]
         return PresentationData(topic, goalAndTasks, author, slidesTitles)
     
     @staticmethod
@@ -37,7 +36,7 @@ class PresentationParser:
         '''
         if not slides:
             return 'Not found'
-        return PresentationParser.__getSlideTitle(slides[0])
+        return PresentationParserService.__getSlideTitle(slides[0])
     
     @staticmethod
     def __getAuthor(slides: Slides) -> str:
@@ -50,11 +49,11 @@ class PresentationParser:
         '''
         if not slides:
             return 'Not found'
-        frontPageText = PresentationParser.__getSlideText(slides[0]).lower()
-        leftPointer = frontPageText.find(config.LEFT_AUTHOR_MARK)
+        frontPageText = PresentationParserService.__getSlideText(slides[0]).lower()
+        leftPointer = frontPageText.find(presentation_config.LEFT_AUTHOR_MARK)
         if leftPointer == -1: return 'Not found'
-        rightPointer = frontPageText.find(config.RIGHT_AUTHOR_MARK)
-        return frontPageText[leftPointer + len(config.LEFT_AUTHOR_MARK): rightPointer].strip()
+        rightPointer = frontPageText.find(presentation_config.RIGHT_AUTHOR_MARK)
+        return frontPageText[leftPointer + len(presentation_config.LEFT_AUTHOR_MARK): rightPointer].strip()
     
     @staticmethod
     def __getGoalAndTasks(slides: Slides) -> str:
@@ -67,15 +66,15 @@ class PresentationParser:
         '''
         slide = None
         for slide_ in slides:
-            if PresentationParser.__getSlideTitle(slide_).lower() == config.GOAL_AND_TASKS_SLIDE_TITLE:
+            if PresentationParserService.__getSlideTitle(slide_).lower() == presentation_config.GOAL_AND_TASKS_SLIDE_TITLE:
                 slide = slide_
                 break
         if slide is None:
             return 'Not found'
-        return PresentationParser.__getSlideText(slide)
+        return PresentationParserService.__getSlideText(slide)
 
     @staticmethod
-    @utils.deleteSpecialSymbolsFromOutput
+    @presentation_utils.deleteSpecialSymbolsFromOutput
     def __getSlideTitle(slide: Slide) -> str:
         '''Method to get title from slide. 
         Args:
@@ -88,7 +87,7 @@ class PresentationParser:
         return slide.shapes.title.text
     
     @staticmethod
-    @utils.deleteSpecialSymbolsFromOutput
+    @presentation_utils.deleteSpecialSymbolsFromOutput
     def __getSlideText(slide: Slide) -> str:
         '''Method to get full text from slide. 
         Args:
