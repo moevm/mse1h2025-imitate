@@ -1,0 +1,1 @@
+from graduate_imitator.apps.graduation.domain.models.user import User
