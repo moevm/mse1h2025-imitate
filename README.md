@@ -39,10 +39,11 @@ docker exec -it django_backend python manage.py createsuperuser
 
 1. Создайте и активируйте виртуальное окружение:
 ```bash
-python -m venv venv
 # Windows:
+python -m venv venv
 venv\Scripts\activate
 # Linux/Mac:
+python3 -m venv venv
 source venv/bin/activate
 ```
 
@@ -54,7 +55,6 @@ pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requiremen
 
 3. Настройте базу данных и запустите сервер:
 ```bash
-cd mse1h2025_imitate
 python manage.py migrate
 python manage.py runserver
 ```
@@ -66,7 +66,7 @@ python manage.py runserver
 docker exec -it django_backend bash
 ```
 
-2. Запустите тесты (из директории /app/mse1h2025_imitate):
+2. Запустите тесты:
 ```bash
 # Все тесты
 pytest -v
@@ -83,7 +83,7 @@ pytest tests/test_file.py::TestClass::test_method -v
 ## 5. Деплой в production
 
 1. Обязательные изменения перед деплоем:
-- В `mse1h2025_imitate/settings.py` установите:
+- В `graduate_imitator/config/settings.py` установите:
   ```python
   DEBUG = False
   ALLOWED_HOSTS = ['ваш-домен.ru', 'ip-адрес']
