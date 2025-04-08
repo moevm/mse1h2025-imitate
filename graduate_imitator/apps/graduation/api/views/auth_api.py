@@ -145,3 +145,15 @@ class LogoutAPIView(APIView):
 
         except Exception as e:
             return JsonResponse({"error": "An error occurred during logout."}, status=500)
+
+class UserStatusAPIView(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return Response({
+                "is_authenticated": True,
+                "username": request.user.username
+            })
+        else:
+            return Response({
+                "is_authenticated": False
+            })
