@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import List
+from pydantic import BaseModel
 
 
-@dataclass
-class PresentationData:
+class PresentationData(BaseModel):
     topic: str
     goalAndTasks: str
     author: str
