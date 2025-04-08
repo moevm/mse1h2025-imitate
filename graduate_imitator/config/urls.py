@@ -1,5 +1,6 @@
 from graduate_imitator.apps.graduation.api.views.users import RegisterAPIView, LoginAPIView, LogoutAPIView
 from graduate_imitator.apps.graduation.interfaces.web.views import RegisterWebView, LoginWebView
+from graduate_imitator.apps.graduation.api.views.presentation import load_presentation
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import permissions
@@ -31,6 +32,7 @@ urlpatterns = [
     path('api/users/register', RegisterAPIView.as_view(), name='api-register'),
     path('api/users/login', LoginAPIView.as_view(), name='api-login'),
     path('api/users/logout', LogoutAPIView.as_view(), name='api-logout'),
+    path('api/presentation/load', load_presentation),
     
     # Web Views
     path('register', RegisterWebView.as_view(), name='web-register'),
