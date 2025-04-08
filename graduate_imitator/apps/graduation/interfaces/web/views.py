@@ -28,3 +28,8 @@ class LoginWebView(View):
             except JSONDecodeError:
                 context = {}  # Если не удалось декодировать, используем пустой контекст
         return render(request, "user/login.html", context)
+
+
+class ProfileWebView(View):
+    def get(self, request):
+        return render(request, "user/profile.html")
