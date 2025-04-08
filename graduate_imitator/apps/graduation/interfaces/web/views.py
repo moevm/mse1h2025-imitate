@@ -32,4 +32,26 @@ class LoginWebView(View):
 
 class ProfileWebView(View):
     def get(self, request):
-        return render(request, "user/profile.html")
+        context = {
+            "results": ["first_result", "second_result"]
+        }
+        return render(request, "user/profile.html", context)
+
+
+"""
+пример создания данных для отображения на странице профиля:
+
+
+from ...domain.repositories.user_repository import UserRepository
+from ...domain.repositories.presentation_repository import PresentationRepository
+from ...domain.repositories.answer_repository import AnswerRepository
+from datetime import datetime
+from random import randint
+
+user = UserRepository.get_user_by_id(request.user.id)
+PresentationRepository.create_presentation(user, "Title yo", "Filepath yo")
+now1 = datetime.now()
+now2 = datetime.now()
+presentation = PresentationRepository.get_presentations_by_user_id(user)[0]
+AttemptRepository.create_attempt(user, presentation, now1, now2, randint(0, 100), True)
+"""

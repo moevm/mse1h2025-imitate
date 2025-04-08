@@ -5,10 +5,56 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}
-    <p>Добро пожаловать, {{ user.username }}!</p>
-{% else %}
-    <p>Пожалуйста, <a href="{% url 'web-login' %}">войдите</a>.</p>
-{% endif %}
+<div>
+     <div class="top-info">
+         <div>
+             <p class="top-info-username">Имя Пользователя</p>
+             <h2>{{ user.username }}</h2>
+         </div>
+     </div>
+     <h2>Таблица результатов</h2>
+     <div>{{ results }}</div>
+     <ul>
+         {% for result in results %}
+             <li>{{ result }}</li>
+         {% endfor %}
+     </ul>
+     <table class="results-table">
+         <thead>
+             <tr>
+                 <th>Запись ответа</th>
+                 <th>Дата</th>
+                 <th>Оценка</th>
+             </tr>
+         </thead>
+         <tbody>
+             <tr>
+                 <td>25022025_0.mp4</td>
+                 <td>25 фев 2025 22:45</td>
+                 <td>100</td>
+             </tr>
+             <tr>
+                 <td>25022025_0.mp4</td>
+                 <td>25 фев 2025 22:45</td>
+                 <td>100</td>
+             </tr>
+             <tr>
+                 <td>25022025_0.mp4</td>
+                 <td>25 фев 2025 22:45</td>
+                 <td>100</td>
+             </tr>
+             <tr>
+                 <td>25022025_0.mp4</td>
+                 <td>25 фев 2025 22:45</td>
+                 <td>100</td>
+             </tr>
+             <tr>
+                 <td>25022025_0.mp4</td>
+                 <td>25 фев 2025 22:45</td>
+                 <td>100</td>
+             </tr>
+         </tbody>
+     </table>
+ </div>
 
 {% endblock %}
