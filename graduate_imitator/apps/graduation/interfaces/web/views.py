@@ -18,6 +18,7 @@ class RegisterWebView(View):
                 context = {}  # Если не удалось декодировать, используем пустой контекст
         return render(request, "user/register.html", context)
 
+
 class LoginWebView(View):
     def get(self, request):
         context = {}

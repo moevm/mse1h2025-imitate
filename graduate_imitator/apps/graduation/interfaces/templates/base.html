@@ -9,6 +9,9 @@
         {% endblock %}
     </title>
     <link rel="stylesheet" type='text/css' href="{% static 'css/user.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon-96x96.png' %}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
 </head>
 <body>
     <div class="top-menu">
@@ -25,13 +28,9 @@
         </div>
         <div class="flex-container" id='homepage-container'>
             <a href="/">
-                <img src="{% static 'images/homepage.png' %}" alt="Homepage" class="square-images">
-            </a>
-            <a href="/">
-                На главную
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo-image">
             </a>
         </div>
-        <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo-image">
         <div class="flex-container" id='account-container'>
             <a href="/profile">
                 Личный кабинет
