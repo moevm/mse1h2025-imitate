@@ -16,21 +16,7 @@ logger = logging.getLogger(__name__)
 
 class GetResultsAPIView(APIView):
     def get(self, request):
-        from ...domain.repositories.user_repository import UserRepository
-        from ...domain.repositories.presentation_repository import PresentationRepository
-        from ...domain.repositories.answer_repository import AnswerRepository
-        from datetime import datetime
-        from random import randint
-
-        user = UserRepository.get_user_by_id(request.user.id)
-        PresentationRepository.create_presentation(user, "Title yo", "Filepath yo")
-        now1 = datetime.now()
-        now2 = datetime.now()
-        presentation = PresentationRepository.get_presentations_by_user_id(user)[0]
-        AttemptRepository.create_attempt(user, presentation, now1, now2, randint(0, 100), True)
-
         try:
-            print(request.user.id)
             user_id = request.user.id
             limit_param = request.GET.get('limit', 10)
             limit = int(limit_param)
