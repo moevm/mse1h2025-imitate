@@ -1,4 +1,4 @@
-from graduate_imitator.apps.graduation.api.views.users import RegisterAPIView, LoginAPIView, LogoutAPIView
+from graduate_imitator.apps.graduation.api.views.users import RegisterAPIView, LoginAPIView, LogoutAPIView, GetResultsProfileAPIView
 from graduate_imitator.apps.graduation.interfaces.web.views import RegisterWebView, LoginWebView, ProfileWebView
 from django.contrib import admin
 from django.urls import path, include
@@ -22,15 +22,18 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+
 def get_csrf_token(request):
     token = get_token(request)
     return JsonResponse({'csrfToken': token})
+
 
 urlpatterns = [
     # API Endpoints
     path('api/users/register', RegisterAPIView.as_view(), name='api-register'),
     path('api/users/login', LoginAPIView.as_view(), name='api-login'),
     path('api/users/logout', LogoutAPIView.as_view(), name='api-logout'),
+    path('api/users/get-results-for-profile', GetResultsProfileAPIView.as_view(), name='api-get-results-for-profile'),
     
     # Web Views
     path('register', RegisterWebView.as_view(), name='web-register'),
