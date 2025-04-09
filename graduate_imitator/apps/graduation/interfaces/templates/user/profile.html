@@ -6,24 +6,26 @@
 {% block content %}
 
 <div>
-     <div class="top-info">
-         <div>
-             <p class="top-info-username">Имя Пользователя</p>
-             <h2>{{ user.username }}</h2>
-         </div>
-     </div>
-     <h2>Таблица результатов</h2>
-    <table class="results-table">
-        <thead>
-            <tr>
-                <th style="text-align: left;">Запись</th>
-                <th style="text-align: center;">Дата</th>
-                <th style="text-align: right;">Оценка</th>
-            </tr>
-        </thead>
-        <tbody id="results-body">
-        </tbody>
-    </table>
+    <div class="top-info">
+        <div>
+            <p class="top-info-username">Имя Пользователя</p>
+            <h2>{{ user.username }}</h2>
+        </div>
+    </div>
+    <h2>Таблица результатов</h2>
+    <div class="results-panel">
+        <table class="results-table">
+            <thead>
+                <tr class="result-table-header">
+                    <th>Запись</th>
+                    <th>Дата</th>
+                    <th>Оценка</th>
+                </tr>
+            </thead>
+            <tbody id="results-body">
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% if user.is_authenticated %}
