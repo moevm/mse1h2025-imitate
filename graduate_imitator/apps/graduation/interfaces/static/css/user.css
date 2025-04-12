@@ -158,6 +158,71 @@ input::placeholder {
     display: none ;
 }
 
+.top-info{
+    background: #717171;
+}
+
+/* Панель результатов */
+.results-panel {
+    background-color: #717171;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 0 auto;           /* Центрирование панели */
+    min-height: 400px;        /* Увеличенная минимальная высота */
+    /* overflow-y: auto; */        /* Добавляет вертикальную прокрутку при переполнении */
+}
+
+/* Таблица результатов */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.results-table th {
+    padding: 10px 0;
+    text-align: center;
+    color: #fff;
+    font-size: 1.3rem;
+}
+
+.results-table th:last-child {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.results-table th:first-child {
+    text-align: left;
+    padding-left: 10px;
+}
+
+.results-table tr:not(:last-child) {
+    border-bottom: 1px solid #fff;
+}
+
+
+/* Стиль ячеек таблицы - увеличиваем размер шрифта */
+.results-table td {
+    padding: 10px 0;
+    color: #fff;
+    font-size: 1.3rem;  /* Увеличенный размер текста */
+    text-align: center;
+}
+
+.results-table td:first-child {
+    text-align: left;
+    padding-left: 10px;
+}
+
+.results-table td:last-child {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.result-table-header {
+    background-color: #7f7f7f;
+}
+
 /* Media query for screens with a maximum width of 1200px */
 @media (max-width: 1200px) {
     .container {
