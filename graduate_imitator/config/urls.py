@@ -1,6 +1,7 @@
-from graduate_imitator.apps.graduation.api.views.users import RegisterAPIView, LoginAPIView, LogoutAPIView, GetResultsProfileAPIView
-from graduate_imitator.apps.graduation.interfaces.web.views import RegisterWebView, LoginWebView, ProfileWebView
-from graduate_imitator.apps.graduation.api.views.presentation import load_presentation
+from graduate_imitator.apps.graduation.api.views.auth_api import *
+from graduate_imitator.apps.graduation.api.views.results_api import *
+from graduate_imitator.apps.graduation.api.views.protection_api import *
+from graduate_imitator.apps.graduation.interfaces.web.views import *
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import permissions
@@ -36,15 +37,18 @@ urlpatterns = [
     path('api/users/logout', LogoutAPIView.as_view(), name='api-logout'),
     path('api/users/get-results-for-profile', GetResultsProfileAPIView.as_view(), name='api-get-results-for-profile'),
     path('api/presentation/load', load_presentation),
-    
+    path('api/start-protection', StartProtectionAPIView.as_view(), name='start-protection'),
+    path('api/get-results', GetResultsAPIView.as_view(), name='get-results'),
+    path('api/get_user_status', UserStatusAPIView.as_view(), name='get-status'),
+
     # Web Views
+    path('', HomeWebView.as_view(), name='home'),
     path('register', RegisterWebView.as_view(), name='web-register'),
     path('login', LoginWebView.as_view(), name='web-login'),
     path('profile', ProfileWebView.as_view(), name='web-profile'),
     
     #Swagger
     path('api/schema', SpectacularAPIView.as_view(), name='schema'),
-    path('swagger', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('swagger', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('admin', admin.site.urls),

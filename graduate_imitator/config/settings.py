@@ -21,6 +21,8 @@ AUTH_USER_MODEL = 'graduation.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'drf_spectacular',
+    'drf_yasg',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    {% if user.is_authenticated %}
+    <div class="main-content">
+        <div class="left-section">
+            <button id="start-protection-btn" class="start-protection-btn">Начать защиту</button>
+        </div>
+
+        <div class="right-section">
+            <div class="results-panel">
+                <h3 style="font-size: 1.5rem">Последние результаты</h3>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Дата</th>
+                            <th style="text-align: right;">Оценка</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="auth-container">
+         <a href="/login" class="btn login-btn">Войти</a>
+    </div>
+    {% endif %}
+</div>
+
+<div id="error-message" class="error" style="display: none;">
+    <p></p>
+</div>
+
+{% if user.is_authenticated %}
+    <script src="{% static 'js/home.js' %}"></script>
+{% endif %}
+{% endblock %}

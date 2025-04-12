@@ -12,10 +12,9 @@ class RegisterWebView(View):
         context = {}
         if 'context_for_front' in request.GET:
             try:
-                # Декодируем JSON-строку в словарь
                 context = loads(request.GET['context_for_front'])
             except JSONDecodeError:
-                context = {}  # Если не удалось декодировать, используем пустой контекст
+                context = {}
         return render(request, "user/register.html", context)
 
 
@@ -65,3 +64,13 @@ if len(results) > 10:
     for r in results:
         AttemptRepository.delete_attempt(r.id)
 """
+
+class HomeWebView(View):
+    def get(self, request):
+        context = {}
+        if 'context_for_front' in request.GET:
+            try:
+                context = loads(request.GET['context_for_front'])
+            except JSONDecodeError:
+                context = {}
+        return render(request, "home/home.html", context)
