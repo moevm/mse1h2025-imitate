@@ -2,6 +2,7 @@ from graduate_imitator.apps.graduation.api.views.auth_api import *
 from graduate_imitator.apps.graduation.api.views.results_api import *
 from graduate_imitator.apps.graduation.api.views.protection_api import *
 from graduate_imitator.apps.graduation.interfaces.web.views import *
+from graduate_imitator.apps.graduation.api.views.presentation import load_presentation
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import permissions
