@@ -1,6 +1,6 @@
 from pptx import Presentation
 from pptx.slide import Slides, Slide
-from typing import List
+from typing import IO, Union
 
 from graduate_imitator.apps.graduation.domain.dto.presentation_data import PresentationData
 from . import config
@@ -11,21 +11,26 @@ class PresentationParser:
     '''Class for parsing PPTX presentations'''
 
     @staticmethod
-    def parsePPTX(pathToFile: str) -> PresentationData:
+    def parsePPTX(file: Union[str, IO[bytes]]) -> PresentationData:
         '''Method to parse all needed info from pptx presentation
         Args:
-            pathToFile: str - path to pptx presentation file
+            file: str or bytes array - path to pptx presentation file or bytes array
         Returns:
             PresentationData object
         Raises:
             pptx.exc.PackageNotFoundError - if file does not exists or file with invalid format
         ''' 
-        presentation = Presentation(pathToFile)
+        presentation = Presentation(file)
         topic = PresentationParser.__getTopic(presentation.slides)
         goalAndTasks = PresentationParser.__getGoalAndTasks(presentation.slides)
         author = PresentationParser.__getAuthor(presentation.slides)
         slidesTitles = [PresentationParser.__getSlideTitle(slide) for slide in presentation.slides]
-        return PresentationData(topic, goalAndTasks, author, slidesTitles)
+        return PresentationData(
+            topic=topic,
+            goalAndTasks=goalAndTasks,
+            author=author,
+            slidesTitles=slidesTitles
+        )
     
     @staticmethod
     def __getTopic(slides: Slides) -> str:

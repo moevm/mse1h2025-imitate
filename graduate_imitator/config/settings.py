@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'graduate_imitator.apps.graduation',
+    'drf_yasg',
+    'drf_spectacular'
 ]
 
 MIDDLEWARE = [

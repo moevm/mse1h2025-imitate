@@ -17,6 +17,9 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 
+from graduate_imitator.apps.graduation.domain.repositories.attempt_repository import *
+from graduate_imitator.apps.graduation.domain.repositories.user_repository import UserRepository
+
 
 class RegisterAPIView(APIView):
     permission_classes = [AllowAny]
@@ -55,6 +58,7 @@ class RegisterAPIView(APIView):
                 {'error': 'Failed to register user', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]
@@ -114,6 +118,7 @@ class LoginAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             ),
 
+
 class LogoutAPIView(APIView):
     def get(self, request):
         return self._handle_logout(request)
@@ -145,15 +150,3 @@ class LogoutAPIView(APIView):
 
         except Exception as e:
             return JsonResponse({"error": "An error occurred during logout."}, status=500)
-
-class UserStatusAPIView(APIView):
-    def get(self, request):
-        if request.user.is_authenticated:
-            return Response({
-                "is_authenticated": True,
-                "username": request.user.username
-            })
-        else:
-            return Response({
-                "is_authenticated": False
-            })

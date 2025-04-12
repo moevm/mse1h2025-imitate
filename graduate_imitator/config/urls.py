@@ -24,15 +24,19 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+
 def get_csrf_token(request):
     token = get_token(request)
     return JsonResponse({'csrfToken': token})
+
 
 urlpatterns = [
     # API Endpoints
     path('api/users/register', RegisterAPIView.as_view(), name='api-register'),
     path('api/users/login', LoginAPIView.as_view(), name='api-login'),
     path('api/users/logout', LogoutAPIView.as_view(), name='api-logout'),
+    path('api/users/get-results-for-profile', GetResultsProfileAPIView.as_view(), name='api-get-results-for-profile'),
+    path('api/presentation/load', load_presentation),
     path('api/start-protection', StartProtectionAPIView.as_view(), name='start-protection'),
     path('api/get-results', GetResultsAPIView.as_view(), name='get-results'),
     path('api/get_user_status', UserStatusAPIView.as_view(), name='get-status'),
@@ -41,6 +45,7 @@ urlpatterns = [
     path('', HomeWebView.as_view(), name='home'),
     path('register', RegisterWebView.as_view(), name='web-register'),
     path('login', LoginWebView.as_view(), name='web-login'),
+    path('profile', ProfileWebView.as_view(), name='web-profile'),
     
     #Swagger
     path('api/schema', SpectacularAPIView.as_view(), name='schema'),
