@@ -3,6 +3,10 @@
 
 {% block title %}Главная{% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" type='text/css' href="{% static 'css/home.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="home-container">
     {% if user.is_authenticated %}

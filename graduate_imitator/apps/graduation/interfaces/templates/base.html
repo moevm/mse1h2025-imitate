@@ -8,8 +8,8 @@
         {% block title %}
         {% endblock %}
     </title>
-    <link rel="stylesheet" type='text/css' href="{% static 'css/user.css' %}">
-    <link rel="stylesheet" type='text/css' href="{% static 'css/home.css' %}">
+    {% block styles %}
+    {% endblock %}
 </head>
 <body>
     <div class="top-menu">
