@@ -7,6 +7,7 @@ html, body {
     padding: 0;
     height: 100%;
     overflow: hidden; /* скрываем прокрутку, если контент точно должен помещаться */
+    font-family: Arial, sans-serif;
 }
 
 .home-container {
@@ -149,3 +150,143 @@ html, body {
 .results-table td:last-child {
     text-align: right;
 }
+
+
+
+/* Стили для верхнего меню (много снизу) */
+
+
+.top-menu {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: #434343;
+    align-items: center; /* Center items vertically */
+    text-align: center; /* Center text within each item */
+}
+
+.top-menu a {
+    color: white;
+    text-decoration: none;
+}
+
+.burger{
+    display: none;
+}
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 5px 0;
+}
+
+.nav-list {
+    display: none ;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* This will center items vertically */
+    gap: 10px;
+}
+
+.logo-image{
+    /* max-width: 150px; */
+    height: 60px;
+    margin: 0;
+}
+
+.square-images{
+    max-width: 50px;
+    height: 50px;
+}
+
+/* Media query for screens with a maximum width of 1200px */
+@media (max-width: 1200px) {
+    .top-menu {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        background: #434343;
+        align-items: center; /* Center items vertically */
+        text-align: center; /* Center text within each item */
+    }
+
+    .top-menu .flex-container {
+        justify-content: center; /* Center flex items */
+    }
+}
+
+/* Media query for screens with a maximum width of 376px */
+@media (max-width: 652px) {
+    #homepage-container, #account-container{
+        display: none;
+        flex-direction: column;
+        align-items: center; /* This will center items vertically */
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .logo-image{
+        margin: 0;
+    }
+
+    .burger{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 10px;
+        width: 30%;
+    }
+
+    .nav-toggle {
+        display: block;
+        height: 60px;
+    }
+
+    .top-menu{
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .nav-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        height: 0;
+        overflow: hidden;
+        width: 100%;
+        min-height: 0;
+    }
+
+    .nav-list.open {
+        height: max-content; /* устанавливаем высоту для раскрытого меню*/
+        padding-bottom: 20px;
+        padding-left: 0px;
+        text-align: left;
+        width: max-content;
+    }
+
+    .header-link{
+        padding: 10px;
+    }
+}
+
+
+/* Конец стилей для верхнего меню */
+
+
