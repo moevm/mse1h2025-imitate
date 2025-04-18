@@ -1,0 +1,292 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* скрываем прокрутку, если контент точно должен помещаться */
+    font-family: Arial, sans-serif;
+}
+
+.home-container {
+    height: 100vh; /* гарантируем, что контейнер занимает ровно один экран */
+    background-color: #383838;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+}
+
+.app-logo {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Основной контент - кнопка и таблица на одном уровне */
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px; /* если этот padding слишком большой, можно его уменьшить */
+}
+
+/* Левая часть с кнопкой */
+.left-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Кнопка "Начать защиту" */
+.start-protection-btn {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    background-color: #3692D2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.start-protection-btn:hover {
+    background-color: #0052cc;
+}
+
+/* Правая часть с таблицей результатов */
+.right-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Блок для ошибок */
+.error {
+    background-color: #ff4444;
+    color: #fff;
+    margin: 20px auto;
+    padding: 10px;
+    width: 300px;
+    border-radius: 4px;
+}
+
+/* Контейнер для кнопки авторизации */
+.auth-container {
+    position: fixed; /* Фиксируем контейнер относительно окна */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* Занимает всю высоту окна */
+    display: flex;
+    align-items: center;  /* Вертикальное центрирование */
+    justify-content: center;  /* Горизонтальное центрирование */
+    margin: 0;
+    padding: 0;
+}
+
+/* Стили для кнопки авторизации */
+.auth-container .btn.login-btn {
+    padding: 15px 30px;
+    font-size: 2.0rem;
+    background-color: #3692D2;
+    width: auto;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0;
+}
+
+/* Панель результатов */
+.results-panel {
+    background-color: #717171;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;               /* Ширина панели 80% от родительского контейнера */
+    max-width: 800px;         /* Максимальная ширина 800px */
+    margin: 0 auto;           /* Центрирование панели */
+    min-height: 400px;        /* Увеличенная минимальная высота */
+    overflow-y: auto;         /* Добавляет вертикальную прокрутку при переполнении */
+}
+
+/* Таблица результатов */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.results-table th {
+    padding: 10px 0;
+    text-align: left;
+    color: #fff;
+    font-size: 1.3rem;
+}
+
+.results-table tr:not(:last-child) {
+    border-bottom: 1px solid #fff;
+}
+
+
+/* Стиль ячеек таблицы - увеличиваем размер шрифта */
+.results-table td {
+    padding: 10px 0;
+    color: #fff;
+    font-size: 1.3rem;  /* Увеличенный размер текста */
+    text-align: left;
+}
+
+/* Выравнивание оценки по правому краю */
+.results-table td:last-child {
+    text-align: right;
+}
+
+
+
+/* Стили для верхнего меню (много снизу) */
+
+
+.top-menu {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: #434343;
+    align-items: center; /* Center items vertically */
+    text-align: center; /* Center text within each item */
+}
+
+.top-menu a {
+    color: white;
+    text-decoration: none;
+}
+
+.burger{
+    display: none;
+}
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 5px 0;
+}
+
+.nav-list {
+    display: none ;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* This will center items vertically */
+    gap: 10px;
+}
+
+.logo-image{
+    /* max-width: 150px; */
+    height: 60px;
+    margin: 0;
+}
+
+.square-images{
+    max-width: 50px;
+    height: 50px;
+}
+
+/* Media query for screens with a maximum width of 1200px */
+@media (max-width: 1200px) {
+    .top-menu {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        background: #434343;
+        align-items: center; /* Center items vertically */
+        text-align: center; /* Center text within each item */
+    }
+
+    .top-menu .flex-container {
+        justify-content: center; /* Center flex items */
+    }
+}
+
+/* Media query for screens with a maximum width of 376px */
+@media (max-width: 652px) {
+    #homepage-container, #account-container{
+        display: none;
+        flex-direction: column;
+        align-items: center; /* This will center items vertically */
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .logo-image{
+        margin: 0;
+    }
+
+    .burger{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 10px;
+        width: 30%;
+    }
+
+    .nav-toggle {
+        display: block;
+        height: 60px;
+    }
+
+    .top-menu{
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .nav-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        height: 0;
+        overflow: hidden;
+        width: 100%;
+        min-height: 0;
+    }
+
+    .nav-list.open {
+        height: max-content; /* устанавливаем высоту для раскрытого меню*/
+        padding-bottom: 20px;
+        padding-left: 0px;
+        text-align: left;
+        width: max-content;
+    }
+
+    .header-link{
+        padding: 10px;
+    }
+}
+
+
+/* Конец стилей для верхнего меню */
+
+

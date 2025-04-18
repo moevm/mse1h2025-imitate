@@ -17,6 +17,9 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 
+from graduate_imitator.apps.graduation.domain.repositories.attempt_repository import *
+from graduate_imitator.apps.graduation.domain.repositories.user_repository import UserRepository
+
 
 class RegisterAPIView(APIView):
     permission_classes = [AllowAny]
@@ -55,6 +58,7 @@ class RegisterAPIView(APIView):
                 {'error': 'Failed to register user', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]
@@ -114,6 +118,7 @@ class LoginAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             ),
 
+
 class LogoutAPIView(APIView):
     def get(self, request):
         return self._handle_logout(request)
@@ -145,3 +150,43 @@ class LogoutAPIView(APIView):
 
         except Exception as e:
             return JsonResponse({"error": "An error occurred during logout."}, status=500)
+        
+class GetResultsProfileAPIView(APIView):
+    def get(self, request):
+        try:
+            user_id = request.user.id
+            user = UserRepository.get_user_by_id(user_id)
+
+            attempts = AttemptRepository.get_attempts_by_user_id(user)
+
+            results = []
+
+            # todo: filename привязку сделать к реальному, когда появиться
+            from random import choices
+
+            if attempts:
+                for attempt in attempts:
+                    date_field = attempt.start_time
+                    formatted_date = date_field.strftime('%d %b %Y %H:%M')
+                    results.append({
+                        "filename": ''.join(choices("1234567890", k=8)) + "_0.mp4",
+                        "date": formatted_date,
+                        "score": attempt.score
+                    })
+
+            return Response({"results": results}, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Error retrieving results: {e}")
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class UserStatusAPIView(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return Response({
+                "is_authenticated": True,
+                "username": request.user.username
+            })
+        else:
+            return Response({
+                "is_authenticated": False
+            })

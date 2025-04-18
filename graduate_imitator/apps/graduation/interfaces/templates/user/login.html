@@ -3,6 +3,10 @@
 
 {% block title %}Авторизация{% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" type='text/css' href="{% static 'css/user.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="form-box">
@@ -54,7 +58,7 @@
                 errorDiv.style.display = 'block';
                 errorDiv.querySelector('p').textContent = data.error || 'Ошибка авторизации';
             } else {
-                window.location.href = '/';
+                window.location.href = '/profile';
             }
         } catch (error) {
             console.error('Ошибка:', error);

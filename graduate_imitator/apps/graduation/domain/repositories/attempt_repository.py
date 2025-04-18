@@ -75,3 +75,11 @@ class AttemptRepository:
         except Exception as e:
             logger.error(f"Error retrieving all attempts: {e}")
             return None
+
+    @staticmethod
+    def get_limited_attempts_by_user_id(user_id, limit):
+        try:
+            return list(Attempt.objects.filter(user_id=user_id).order_by('-start_time')[:limit])
+        except Exception as e:
+            logger.error(f"Error retrieving limited attempts for user_id {user_id} with limit {limit}: {e}")
+            return None
