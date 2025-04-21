@@ -2,7 +2,6 @@ from graduate_imitator.apps.graduation.api.views.auth_api import *
 from graduate_imitator.apps.graduation.api.views.results_api import *
 from graduate_imitator.apps.graduation.api.views.protection_api import *
 from graduate_imitator.apps.graduation.interfaces.web.views import *
-from graduate_imitator.apps.graduation.api.views.questions_api import *
 from graduate_imitator.apps.graduation.api.views.presentation import load_presentation
 from django.contrib import admin
 from django.urls import path, include
@@ -42,7 +41,6 @@ urlpatterns = [
     path('api/start-protection', StartProtectionAPIView.as_view(), name='start-protection'),
     path('api/get-results', GetResultsAPIView.as_view(), name='get-results'),
     path('api/get_user_status', UserStatusAPIView.as_view(), name='get-status'),
-    path('api/get_questions', GetQuestionsAPIView.as_view(), name='get-questions'),
 
     # Web Views
     path('', HomeWebView.as_view(), name='home'),
