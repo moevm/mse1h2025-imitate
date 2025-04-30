@@ -47,6 +47,7 @@ class StartProtectionAPIView(APIView):
 
             b64 = base64.b64encode(wav_bytes).decode('utf-8')
             items.append({
+                "id": q.id,
                 "text": q.question_text,
                 "audio": f"data:audio/wav;base64,{b64}"
             })
