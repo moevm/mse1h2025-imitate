@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema, OpenApiExample, OpenApiResponse, OpenApiTypes
-from graduate_imitator.apps.graduation.infrastructure.parsers.presentation_parser.presentation_parser import PresentationParser
 from graduate_imitator.apps.graduation.domain.dto.presentation_data import PresentationData
+from graduate_imitator.apps.graduation.infrastructure.utils.presentation_processing import PresentationProcessingService
 from zipfile import BadZipFile
 
 
@@ -48,7 +48,7 @@ def load_presentation(request: Request):
         presentation_file.read()
     )
     try:
-        parsed_data = PresentationParser.parsePPTX(file_data)
+        parsed_data = PresentationProcessingService.process_presentation(file_data)
     except BadZipFile:
         return JsonResponse({'error_msg': 'Bad filetype'}, status=400)
     return JsonResponse(parsed_data.model_dump())

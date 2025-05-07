@@ -1,0 +1,1 @@
+SPECIAL_SYMBOLS = ['\t', '\n', '\r']
