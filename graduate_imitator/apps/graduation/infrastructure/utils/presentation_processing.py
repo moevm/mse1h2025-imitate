@@ -2,12 +2,16 @@ from graduate_imitator.apps.graduation.infrastructure.parsers.presentation_parse
 from graduate_imitator.apps.graduation.utils.presentation_processing_utils import get_10_keywords, clear_text
 from pptx import Presentation
 from pptx.slide import Slides, Slide
+from zipfile import BadZipFile
 
 
 class PresentationProcessingService:
     @staticmethod
     def get_10_keywords(presentation_file):
-        presentation = Presentation(presentation_file)
+        try:
+            presentation = Presentation(presentation_file)
+        except BadZipFile:
+            return ["Bad presentation file (perhaps invalid file format)"]
         slides_text = []
 
         for slide in presentation.slides:
