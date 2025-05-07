@@ -2,18 +2,21 @@ from graduate_imitator.apps.graduation.infrastructure.utils.config import SPECIA
 
 
 def clear_text(text):
-    new_text = text[::]
-    for i in range(len(new_text)):
-        item = new_text[i]
-        for jtem in SPECIAL_SYMBOLS:
-            item = item.replace(jtem, "")
-        new_text[i] = item
-    return new_text
+    for item in SPECIAL_SYMBOLS:
+        text = text.replace(item, "")
+    return text.strip()
 
 
 def delete_trash_words(text):
-    pass
+
+    # удаление треш слов
+
+    return text
 
 
-def get_10_most_popular_words(text):
-    text = clear_text(text)
+def get_10_keywords(text):
+    new_text = text[::]
+    for i in range(len(new_text)):
+        new_text[i] = delete_trash_words(new_text[i])
+
+    # вычисление 10 слов

@@ -14,6 +14,7 @@ import soundfile as sf
 from rest_framework.permissions import AllowAny    # ← добавили сюда
 from graduate_imitator.apps.graduation.domain.repositories.question_repository import *
 from graduate_imitator.apps.graduation.domain.services.text_to_speach_service import *
+from graduate_imitator.apps.graduation.infrastructure.utils.presentation_processing import PresentationProcessingService
 
 
 class StartProtectionAPIView(APIView):
@@ -26,7 +27,16 @@ class StartProtectionAPIView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-        keywords = request.data.get('keywords', [])
+        presentation_file = request.FILES.get('presentation')
+        if not presentation_file:
+            return Response(
+                {"error": f"Missing presentation file"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        presentation_data = io.BytesIO(presentation_file.read())
+        # вызов сервиса вытаскивания ключевых слов
+        keywords = PresentationProcessingService.get_10_keywords(presentation_data)
+
         language = request.data['language']
         model_id = request.data['model_id']
         speaker = request.data['speaker']

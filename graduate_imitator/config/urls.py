@@ -2,7 +2,7 @@ from graduate_imitator.apps.graduation.api.views.auth_api import *
 from graduate_imitator.apps.graduation.api.views.results_api import *
 from graduate_imitator.apps.graduation.api.views.protection_api import *
 from graduate_imitator.apps.graduation.interfaces.web.views import *
-from graduate_imitator.apps.graduation.api.views.presentation import load_presentation
+# from graduate_imitator.apps.graduation.api.views.presentation import load_presentation
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import permissions
@@ -37,7 +37,7 @@ urlpatterns = [
     path('api/users/login', LoginAPIView.as_view(), name='api-login'),
     path('api/users/logout', LogoutAPIView.as_view(), name='api-logout'),
     path('api/users/get-results-for-profile', GetResultsProfileAPIView.as_view(), name='api-get-results-for-profile'),
-    path('api/presentation/load', load_presentation),
+    # path('api/presentation/load', load_presentation),
     path('api/start-protection', StartProtectionAPIView.as_view(), name='start-protection'),
     path('api/get-results', GetResultsAPIView.as_view(), name='get-results'),
     path('api/get_user_status', UserStatusAPIView.as_view(), name='get-status'),
