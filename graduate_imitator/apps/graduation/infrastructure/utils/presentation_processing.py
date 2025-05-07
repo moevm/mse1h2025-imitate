@@ -18,7 +18,7 @@ class PresentationProcessingService:
                 for paragraph in shape.text_frame.paragraphs:
                     for run in paragraph.runs:
                         slide_text.append(clear_text(run.text))
-            slides_text.append(" ".join(slide_text))
+            slides_text.append(" ".join(slide_text).lower())
 
         keywords = get_10_keywords(slides_text)
         return keywords

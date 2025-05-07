@@ -41,28 +41,33 @@ class StartProtectionAPIView(APIView):
         model_id = request.data['model_id']
         speaker = request.data['speaker']
 
-        questions = QuestionRepository.get_questions_by_keywords_any(keywords)
-        tts = TextToSpeechService(language, model_id, speaker)
-
-        items = []
-        for q in questions:
-            audio_array = tts.get_speech_by_text(q.question_text)
-
-            if isinstance(audio_array, torch.Tensor):
-                audio_array = audio_array.detach().cpu().numpy()
-
-            buf = io.BytesIO()
-            sf.write(buf, audio_array, tts.sample_rate, format='WAV')
-            wav_bytes = buf.getvalue()
-
-            b64 = base64.b64encode(wav_bytes).decode('utf-8')
-            items.append({
-                "id": q.id,
-                "text": q.question_text,
-                "audio": f"data:audio/wav;base64,{b64}"
-            })
-
         return Response(
-            {"message": "Защита началась", "questions": items},
+            {"language": language, "model_id": model_id, "speaker": speaker, "keywords": keywords},
             status=status.HTTP_200_OK
         )
+
+        # questions = QuestionRepository.get_questions_by_keywords_any(keywords)
+        # tts = TextToSpeechService(language, model_id, speaker)
+        #
+        # items = []
+        # for q in questions:
+        #     audio_array = tts.get_speech_by_text(q.question_text)
+        #
+        #     if isinstance(audio_array, torch.Tensor):
+        #         audio_array = audio_array.detach().cpu().numpy()
+        #
+        #     buf = io.BytesIO()
+        #     sf.write(buf, audio_array, tts.sample_rate, format='WAV')
+        #     wav_bytes = buf.getvalue()
+        #
+        #     b64 = base64.b64encode(wav_bytes).decode('utf-8')
+        #     items.append({
+        #         "id": q.id,
+        #         "text": q.question_text,
+        #         "audio": f"data:audio/wav;base64,{b64}"
+        #     })
+        #
+        # return Response(
+        #     {"message": "Защита началась", "questions": items},
+        #     status=status.HTTP_200_OK
+        # )
