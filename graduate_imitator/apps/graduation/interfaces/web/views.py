@@ -65,6 +65,7 @@ if len(results) > 10:
         AttemptRepository.delete_attempt(r.id)
 """
 
+
 class HomeWebView(View):
     def get(self, request):
         context = {}
