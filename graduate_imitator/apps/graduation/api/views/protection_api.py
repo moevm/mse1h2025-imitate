@@ -1,73 +1,72 @@
-from django.shortcuts import render
-from django.shortcuts import render, redirect
-from django.views import View
-from json import dumps as json_dumps
-from json import loads, JSONDecodeError
-from os.path import join as path_join
-from pathlib import Path
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+    OpenApiTypes,
+    OpenApiExample,
+    OpenApiResponse
+)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-import io
-import base64
-import soundfile as sf
-from rest_framework.permissions import AllowAny    # ← добавили сюда
-from graduate_imitator.apps.graduation.domain.repositories.question_repository import *
-from graduate_imitator.apps.graduation.domain.services.text_to_speach_service import *
-from graduate_imitator.apps.graduation.infrastructure.utils.presentation_processing import PresentationProcessingService
-
+from graduate_imitator.apps.graduation.domain.repositories.question_repository import QuestionRepository
 
 class StartProtectionAPIView(APIView):
-    permission_classes = [AllowAny]
-    def post(self, request):
-        for field in ('language', 'model_id', 'speaker'):
-            if field not in request.data:
-                return Response(
-                    {"error": f"Missing field '{field}'"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-        presentation_file = request.FILES.get('presentation')
-        if not presentation_file:
+    @extend_schema(
+        summary="Начать защиту",
+        description=(
+                "Запускает процедуру защиты: по списку ключевых слов возвращает "
+                "массив вопросов, которые будут использоваться во время защиты."
+        ),
+        parameters=[
+            OpenApiParameter(
+                name="keywords",
+                description="Список ключевых слов через запятую (например: math,physics,algebra)",
+                required=True,
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                examples=[
+                    OpenApiExample(name="single", value="calculus"),
+                    OpenApiExample(name="multiple", value="calculus,algebra,geometry"),
+                ],
+            ),
+        ],
+        responses={
+            200: OpenApiResponse(
+                description="Защита успешно запущена, возвращён список вопросов",
+                response=OpenApiTypes.OBJECT,
+                examples=[
+                    OpenApiExample(
+                        name="success",
+                        value={
+                            "message": "Защита началась",
+                            "questions": [
+                                {"id": 1, "text": "Что такое предел функции?"},
+                                {"id": 5, "text": "Дайте определение группы в алгебре."},
+                            ],
+                        },
+                    ),
+                ],
+            ),
+            500: OpenApiResponse(
+                description="Внутренняя ошибка сервера",
+                response=OpenApiTypes.OBJECT,
+                examples=[
+                    OpenApiExample(name="error", value={"error": "описание ошибки"}),
+                ],
+            ),
+        },
+    )
+    def get(self, request, *args, **kwargs):
+        try:
+            raw = request.query_params.get("keywords", "")
+            keywords = [kw.strip() for kw in raw.split(",") if kw.strip()]
+            questions = QuestionRepository.get_questions_by_keywords_any(keywords)
             return Response(
-                {"error": f"Missing presentation file"},
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": "Защита началась", "questions": list(questions)},
+                status=status.HTTP_200_OK
             )
-        presentation_data = io.BytesIO(presentation_file.read())
-        # вызов сервиса вытаскивания ключевых слов
-        keywords = PresentationProcessingService.get_10_keywords(presentation_data)
-
-        language = request.data['language']
-        model_id = request.data['model_id']
-        speaker = request.data['speaker']
-
-        return Response(
-            {"language": language, "model_id": model_id, "speaker": speaker, "keywords": keywords},
-            status=status.HTTP_200_OK
-        )
-
-        # questions = QuestionRepository.get_questions_by_keywords_any(keywords)
-        # tts = TextToSpeechService(language, model_id, speaker)
-        #
-        # items = []
-        # for q in questions:
-        #     audio_array = tts.get_speech_by_text(q.question_text)
-        #
-        #     if isinstance(audio_array, torch.Tensor):
-        #         audio_array = audio_array.detach().cpu().numpy()
-        #
-        #     buf = io.BytesIO()
-        #     sf.write(buf, audio_array, tts.sample_rate, format='WAV')
-        #     wav_bytes = buf.getvalue()
-        #
-        #     b64 = base64.b64encode(wav_bytes).decode('utf-8')
-        #     items.append({
-        #         "id": q.id,
-        #         "text": q.question_text,
-        #         "audio": f"data:audio/wav;base64,{b64}"
-        #     })
-        #
-        # return Response(
-        #     {"message": "Защита началась", "questions": items},
-        #     status=status.HTTP_200_OK
-        # )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
