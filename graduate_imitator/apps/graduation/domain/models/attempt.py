@@ -7,8 +7,8 @@ from .presentation import Presentation
 class Attempt(models.Model):
     user_id = models.ForeignKey(User, on_delete=ON_DELETE_BEHAVIOUR)
     presentation_id = models.ForeignKey(Presentation, on_delete=ON_DELETE_BEHAVIOUR)
-    start_time = models.DateField()
-    end_time = models.DateField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
     score = models.IntegerField()
     completed = models.BooleanField()
 
