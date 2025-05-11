@@ -1,0 +1,269 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: auto;
+    background-color: #383838;
+    /* скрываем прокрутку, если контент точно должен помещаться */
+    font-family: Arial, sans-serif;
+}
+
+.home-container {
+    height: 100%;
+    /* гарантируем, что контейнер занимает ровно один экран */
+    background-color: #383838;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+}
+
+.app-logo {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Основной контент - кнопка и таблица на одном уровне */
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.centered-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.protection-block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #434343;
+    padding: 40px;
+}
+
+.input-block {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.speaker-block {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #717171;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.protection-block h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.file-input {
+    margin-bottom: 20px;
+    padding: 8px;
+    background-color: #717171;
+    color: white;
+    border: none;
+}
+
+.process-btn {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    background-color: #3692D2;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.process-btn:hover {
+    background-color: #0052cc;
+}
+
+.start-protection-btn {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    background-color: #3692D2;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.start-protection-btn:hover {
+    background-color: #0052cc;
+}
+
+/* Блок для ошибок */
+.error {
+    background-color: #ff4444;
+    color: #fff;
+    margin: 20px auto;
+    padding: 10px;
+    width: 300px;
+}
+
+/* Стили для верхнего меню */
+.top-menu {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: #434343;
+    align-items: center;
+    /* Center items vertically */
+    text-align: center;
+    /* Center text within each item */
+}
+
+.top-menu a {
+    color: white;
+    text-decoration: none;
+}
+
+.burger {
+    display: none;
+}
+
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 5px 0;
+}
+
+.nav-list {
+    display: none;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* This will center items vertically */
+    gap: 10px;
+}
+
+.logo-image {
+    /* max-width: 150px; */
+    height: 60px;
+    margin: 0;
+}
+
+.square-images {
+    max-width: 50px;
+    height: 50px;
+}
+
+/* Media query for screens with a maximum width of 1200px */
+@media (max-width: 1200px) {
+    .top-menu {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        background: #434343;
+        align-items: center;
+        /* Center items vertically */
+        text-align: center;
+        /* Center text within each item */
+    }
+
+    .top-menu .flex-container {
+        justify-content: center;
+        /* Center flex items */
+    }
+}
+
+/* Media query for screens with a maximum width of 376px */
+@media (max-width: 652px) {
+
+    #homepage-container,
+    #account-container {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        /* This will center items vertically */
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .logo-image {
+        margin: 0;
+    }
+
+    .burger {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 10px;
+        width: 30%;
+    }
+
+    .nav-toggle {
+        display: block;
+        height: 60px;
+    }
+
+    .top-menu {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .nav-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        height: 0;
+        overflow: hidden;
+        width: 100%;
+        min-height: 0;
+    }
+
+    .nav-list.open {
+        height: max-content;
+        /* устанавливаем высоту для раскрытого меню*/
+        padding-bottom: 20px;
+        padding-left: 0px;
+        text-align: left;
+        width: max-content;
+    }
+
+    .header-link {
+        padding: 10px;
+    }
+}
+
+/* Конец стилей для верхнего меню */

@@ -47,6 +47,7 @@ urlpatterns = [
     path('register', RegisterWebView.as_view(), name='web-register'),
     path('login', LoginWebView.as_view(), name='web-login'),
     path('profile', ProfileWebView.as_view(), name='web-profile'),
+    path('protection', ProtectionWebView.as_view(), name='web-protection'),
     
     #Swagger
     path('api/schema', SpectacularAPIView.as_view(), name='schema'),
