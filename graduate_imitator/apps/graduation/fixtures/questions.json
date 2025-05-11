@@ -1,0 +1,68 @@
+[
+  {
+    "model": "graduation.question",
+    "pk": 1,
+    "fields": {
+      "question_text": "Сколько градусов в углах треугольника в сумме?",
+      "category": "Математика",
+      "difficulty_level": 1,
+      "keywords": ["треугольник", "углы", "сумма", "градусы"],
+      "answer_keywords": ["180", "градусов"]
+    }
+  },
+  {
+    "model": "graduation.question",
+    "pk": 2,
+    "fields": {
+      "question_text": "Сколько сантиметров в одном метре?",
+      "category": "Математика",
+      "difficulty_level": 1,
+      "keywords": ["метр", "сантиметр", "единицы измерения"],
+      "answer_keywords": ["100", "сто", "сантиметров"]
+    }
+  },
+  {
+    "model": "graduation.question",
+    "pk": 3,
+    "fields": {
+      "question_text": "Что такое вторая космическая скорость?",
+      "category": "Физика",
+      "difficulty_level": 2,
+      "keywords": ["вторая космическая скорость", "орбита", "гравитация"],
+      "answer_keywords": ["минимальная скорость", "выход на орбиту", "побег из гравитации"]
+    }
+  },
+  {
+    "model": "graduation.question",
+    "pk": 4,
+    "fields": {
+      "question_text": "Что измеряет электрический ток?",
+      "category": "Физика",
+      "difficulty_level": 1,
+      "keywords": ["электрический ток", "сила тока", "измерение"],
+      "answer_keywords": ["ампер", "A", "заряд/время"]
+    }
+  },
+  {
+    "model": "graduation.question",
+    "pk": 5,
+    "fields": {
+      "question_text": "Из чего состоит клеточная мембрана?",
+      "category": "Биология",
+      "difficulty_level": 1,
+      "keywords": ["клеточная мембрана", "структура", "липиды", "белки"],
+      "answer_keywords": ["липидный бислой", "фосфолипиды", "белки"]
+    }
+  },
+  {
+    "model": "graduation.question",
+    "pk": 6,
+    "fields": {
+      "question_text": "Как называется процесс, при котором популяция бактерий удваивается за каждый цикл деления?",
+      "category": "Биология",
+      "difficulty_level": 2,
+      "keywords": ["бактерии", "деление", "популяция", "удвоение"],
+      "answer_keywords": ["экспоненциальный рост", "геометрический рост"]
+    }
+  }
+]
