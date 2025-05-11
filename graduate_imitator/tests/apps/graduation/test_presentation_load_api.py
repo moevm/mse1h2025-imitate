@@ -9,7 +9,6 @@ from graduate_imitator.apps.graduation.domain.dto.presentation_data import Prese
 
 @pytest.fixture(scope='module')
 def api_client():
-    print('create api client')
     return APIClient()
 
 
