@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from drf_spectacular.utils import extend_schema, OpenApiExample, OpenApiResponse, OpenApiTypes
 import torch
 import soundfile as sf
@@ -53,6 +54,7 @@ def convert_tensor_to_base64(audio_tensor: torch.Tensor, sample_rate: int) -> st
     }
 )
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def speaker_presets(request):
     demo_phrase = 'Проверьте качество звучания и выберите подходящие настройки.'
     speakers = (
