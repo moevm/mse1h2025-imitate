@@ -1,30 +1,3 @@
-document.getElementById('start-protection-btn').addEventListener('click', async function(event) {
-    event.preventDefault();
-    try {
-        const csrfToken = getCookie('csrftoken');
-        const response = await fetch('/api/start-protection', {
-            method: 'GET',
-            headers: {
-                'X-CSRFToken': csrfToken
-            },
-            credentials: 'include'
-        });
-        if (!response.ok) {
-            const data = await response.json();
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.style.display = 'block';
-            errorDiv.querySelector('p').textContent = data.error || 'Ошибка при запуске защиты';
-        } else {
-            alert('Защита запущена!');
-        }
-    } catch (error) {
-        console.error('Ошибка:', error);
-        const errorDiv = document.getElementById('error-message');
-        errorDiv.style.display = 'block';
-        errorDiv.querySelector('p').textContent = 'Сетевая ошибка';
-    }
-});
-
 async function loadResults() {
     try {
         const response = await fetch('/api/get-results', { credentials: 'include' });

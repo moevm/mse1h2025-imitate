@@ -65,6 +65,7 @@ if len(results) > 10:
         AttemptRepository.delete_attempt(r.id)
 """
 
+
 class HomeWebView(View):
     def get(self, request):
         context = {}
@@ -74,3 +75,14 @@ class HomeWebView(View):
             except JSONDecodeError:
                 context = {}
         return render(request, "home/home.html", context)
+    
+
+class ProtectionWebView(View):
+    def get(self, request):
+        context = {}
+        if 'context_for_front' in request.GET:
+            try:
+                context = loads(request.GET['context_for_front'])
+            except JSONDecodeError:
+                context = {}
+        return render(request, "protection/protection.html", context)

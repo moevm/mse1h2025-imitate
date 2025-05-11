@@ -1,1 +1,17 @@
 pgdata
+.git
+pycache
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+venv
+ENV
+env.bak
+venv.bak
+*.sqlite3
+*.log
+*.md
+.idea
+.vscode
