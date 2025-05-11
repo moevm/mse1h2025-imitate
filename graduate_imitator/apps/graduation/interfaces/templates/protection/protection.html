@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Защита{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type='text/css' href="{% static 'css/protection.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="main-content">
+        <div class="protection-block">
+            <h3>Загрузите презентацию дипломной работы</h3>
+            <div class="input-block">
+                <input type="file" id="presentation-upload" class="file-input" accept=".pptx">
+            </div>
+
+            <div class="input-block">
+                <button class="process-btn" id="process-btn">Обработать</button>
+            </div>
+
+            <h3>Настройки спикера</h3>
+            <div class="speaker-block">   
+                <p>Какие-то настройки</p>
+            </div>
+
+            <div class="input-block">
+                <button class="start-protection-btn" id="start-protection-btn" style="display: none;">Сгенерировать вопросы</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="error-message" class="error centered-content" style="display: none;">
+        <p></p>
+    </div>
+</div>
+
+<script src="{% static 'js/protection.js' %}"></script>
+
+{% endblock %}

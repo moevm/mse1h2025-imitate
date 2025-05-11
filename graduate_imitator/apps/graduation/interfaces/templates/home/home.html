@@ -13,7 +13,9 @@
     {% if user.is_authenticated %}
     <div class="main-content">
         <div class="left-section">
-            <button id="start-protection-btn" class="start-protection-btn">Начать защиту</button>
+            <form action="{% url 'web-protection' %}">
+                <input type="submit" id="start-protection-btn" class="start-protection-btn" value="На страницу защиты"></input>
+            </form>
         </div>
 
         <div class="right-section">
