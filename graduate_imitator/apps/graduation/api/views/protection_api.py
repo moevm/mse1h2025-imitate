@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from graduate_imitator.apps.graduation.domain.repositories.question_repository import QuestionRepository
 
-
 class StartProtectionAPIView(APIView):
     @extend_schema(
         summary="Начать защиту",
