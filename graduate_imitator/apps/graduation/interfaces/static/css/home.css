@@ -66,6 +66,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 20px;
 }
 
 /* Блок для ошибок */
@@ -112,9 +113,9 @@ html, body {
     background-color: #717171;
     padding: 20px;
     border-radius: 8px;
-    width: 80%;               /* Ширина панели 80% от родительского контейнера */
+    width: 50%;               /* Ширина панели 80% от родительского контейнера */
     max-width: 800px;         /* Максимальная ширина 800px */
-    margin: 0 auto;           /* Центрирование панели */
+    /* margin: 0 auto;           Центрирование панели */
     min-height: 400px;        /* Увеличенная минимальная высота */
     overflow-y: auto;         /* Добавляет вертикальную прокрутку при переполнении */
 }
@@ -290,3 +291,138 @@ html, body {
 /* Конец стилей для верхнего меню */
 
 
+.speakers-demo{
+    height: 400px;
+    width: 50%;
+    margin: 0;
+    padding: 20px;
+    background-color: #717171;
+    border-radius: 8px;
+}
+
+
+.speakers-container{
+    height: 100%;
+}
+
+
+#speakers-list{
+    overflow-y: auto;
+    height: 80%;
+}
+
+
+.speaker-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: 1px solid #ddd;
+}
+
+.speaker-card.selected {
+    border-color: #007bff;
+}
+
+.speaker-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.speaker-info {
+    flex-grow: 1;
+}
+
+.speaker-info h4 {
+    margin: 0 0 5px 0;
+}
+
+.speaker-info p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.play-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.play-btn:hover {
+    color: #0056b3;
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Стили для загрузчика спикеров */
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.speakers-loader {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.speakers-loader .circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    border-top-color: #3498db;
+    border-radius: 50%;
+    animation: spin 1.5s cubic-bezier(0.4, 0.1, 0.4, 1) infinite;
+}
+
+.speakers-loader .circle:nth-child(1) {
+    animation-delay: 0.15s;
+    border-top-color: #2980b9;
+}
+
+.speakers-loader .circle:nth-child(2) {
+    animation-delay: 0.3s;
+    border-top-color: #1abc9c;
+}
+
+.speakers-loader .circle:nth-child(3) {
+    animation-delay: 0.45s;
+    border-top-color: #2ecc71;
+}
+
+.loader-text {
+    font-size: 1rem;
+    color: #2c2c2c;
+    animation: pulse 1.5s ease-in-out infinite;
+}

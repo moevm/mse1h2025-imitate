@@ -3,6 +3,7 @@ from graduate_imitator.apps.graduation.api.views.results_api import *
 from graduate_imitator.apps.graduation.api.views.protection_api import *
 from graduate_imitator.apps.graduation.interfaces.web.views import *
 # from graduate_imitator.apps.graduation.api.views.presentation import load_presentation
+from graduate_imitator.apps.graduation.api.views.speaker_presets import speaker_presets
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import permissions
@@ -41,6 +42,7 @@ urlpatterns = [
     path('api/start-protection', StartProtectionAPIView.as_view(), name='start-protection'),
     path('api/get-results', GetResultsAPIView.as_view(), name='get-results'),
     path('api/get_user_status', UserStatusAPIView.as_view(), name='get-status'),
+    path('api/speaker-presets', speaker_presets),
 
     # Web Views
     path('', HomeWebView.as_view(), name='home'),
