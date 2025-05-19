@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ответ на вопросы{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type='text/css' href="{% static 'css/answer.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="main-content">
+        <div class="questions-block">
+            <template id="question-template">
+                <div class="generated-question">
+                    <div class="horizontal-row centered-content">
+                        <div class="question-text">Текст вопроса...</div>
+                        <button class="play-audio-btn">🔊 Слушать</button>
+                    </div>
+                    <div class="horizontal-row centered-content">
+                        <button class="start-record-btn">🎤 Начать запись</button>
+                        <button class="stop-record-btn" style="display: none;">⏹️ Остановить</button>
+                    </div>
+                    <div class="recording-indicator centered-content" style="display: none;">
+                        Идет запись...
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <div id="error-message" class="error centered-content" style="display: none;">
+        <p></p>
+    </div>
+</div>
+
+<script src="{% static 'js/answer.js' %}"></script>
+
+{% endblock %}

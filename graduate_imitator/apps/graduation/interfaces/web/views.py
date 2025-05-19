@@ -86,3 +86,14 @@ class ProtectionWebView(View):
             except JSONDecodeError:
                 context = {}
         return render(request, "protection/protection.html", context)
+    
+
+class AnswerWebView(View):
+    def get(self, request):
+        context = {}
+        if 'context_for_front' in request.GET:
+            try:
+                context = loads(request.GET['context_for_front'])
+            except JSONDecodeError:
+                context = {}
+        return render(request, "protection/answer.html", context)
