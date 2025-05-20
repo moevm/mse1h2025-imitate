@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from json import loads, JSONDecodeError
 from json import dumps as json_dumps
 from pathlib import Path
+import json
 
 
 class RegisterWebView(View):
@@ -90,10 +91,20 @@ class ProtectionWebView(View):
 
 class AnswerWebView(View):
     def get(self, request):
+        return redirect("web-protection")  # если напрямую зашёл
+
+    def post(self, request):
         context = {}
-        if 'context_for_front' in request.GET:
-            try:
-                context = loads(request.GET['context_for_front'])
-            except JSONDecodeError:
-                context = {}
+        try:
+            questions = loads(request.POST.get("questions", "[]"))
+            speaker_info = loads(request.POST.get("speakerInfo", "{}"))
+        except JSONDecodeError:
+            questions = []
+            speaker_info = {}
+
+        context = {
+                'questions': questions,
+                'speakerInfo': speaker_info,
+            }
+
         return render(request, "protection/answer.html", context)

@@ -12,6 +12,7 @@ from drf_yasg import openapi
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
+from graduate_imitator.apps.graduation.api.views.answer_api import *
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -41,6 +42,7 @@ urlpatterns = [
     path('api/presentation/extract_keywords', upload_presentation_and_extract_keywords, name='extract_keywords'),
     path('api/start-protection', StartProtectionAPIView.as_view(), name='start-protection'),
     path('api/answer', AnswerWebView.as_view(), name='answer'),
+    path('api/text-to-speech/', TextToSpeechAPIView.as_view(), name='text-to-speech'),
     path('api/get-results', GetResultsAPIView.as_view(), name='get-results'),
     path('api/get_user_status', UserStatusAPIView.as_view(), name='get-status'),
     path('api/speaker-presets', speaker_presets),
@@ -51,6 +53,7 @@ urlpatterns = [
     path('login', LoginWebView.as_view(), name='web-login'),
     path('profile', ProfileWebView.as_view(), name='web-profile'),
     path('protection', ProtectionWebView.as_view(), name='web-protection'),
+    path('answer', AnswerWebView.as_view(), name='web-answer'),
     
     #Swagger
     path('api/schema', SpectacularAPIView.as_view(), name='schema'),

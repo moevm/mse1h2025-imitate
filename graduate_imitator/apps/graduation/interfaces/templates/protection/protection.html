@@ -38,7 +38,12 @@
             </div>
 
             <div class="input-block">
-                <button class="start-protection-btn" id="start-protection-btn" style="display: none;">Сгенерировать вопросы</button>
+                <form id="to-answer-form" method="POST" action="{% url 'web-answer' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="questions" id="questions-input">
+                    <input type="hidden" name="speakerInfo" id="speaker-input">
+                    <button type="submit" class="start-protection-btn" id="start-protection-btn" style="display: none;">Сгенерировать вопросы</button>
+                </form>
             </div>
         </div>
     </div>

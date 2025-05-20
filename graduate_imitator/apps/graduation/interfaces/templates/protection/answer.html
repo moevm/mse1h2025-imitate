@@ -16,6 +16,7 @@
                     <div class="horizontal-row centered-content">
                         <div class="question-text">Текст вопроса...</div>
                         <button class="play-audio-btn">🔊 Слушать</button>
+                        <audio id="speaker-audio-player"></audio>
                     </div>
                     <div class="horizontal-row centered-content">
                         <button class="start-record-btn">🎤 Начать запись</button>
@@ -34,6 +35,10 @@
     </div>
 </div>
 
+<script>
+    const questions = {{ questions|safe }};
+    const speakerInfo = {{ speakerInfo|safe }};
+</script>
 <script src="{% static 'js/answer.js' %}"></script>
 
 {% endblock %}

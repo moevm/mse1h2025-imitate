@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const questions = JSON.parse(sessionStorage.getItem('questions') || '[]');
+    const dataElement = document.getElementById('answer-data');
+
     const container = document.querySelector('.questions-block');
     const template = document.getElementById('question-template');
 
@@ -30,4 +31,65 @@ document.addEventListener("DOMContentLoaded", function () {
 
         container.appendChild(clone);
     });
+})
+
+document.addEventListener('DOMContentLoaded', function () {
+    const playBtn = document.querySelector('.play-audio-btn');
+    const questionText = document.querySelector('.question-text').innerText;
+    const audioPlayer = document.getElementById('speaker-audio-player');
+
+    playBtn.addEventListener('click', async function () {
+        try {
+            // Покажи загрузку (опционально)
+            playBtn.disabled = true;
+            playBtn.textContent = '⏳ Готовим...';
+
+            const response = await fetch('/api/text-to-speech/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    text: questionText,
+                    speaker: speakerInfo.name,
+                    model_id: speakerInfo.model_id,
+                    language: speakerInfo.language
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка запроса к TTS API');
+            }
+
+            const data = await response.json();
+            const audioSrc = data.question_tts.audio_sample;
+
+            audioPlayer.src = audioSrc;
+            audioPlayer.play();
+
+        } catch (error) {
+            console.error('Ошибка при воспроизведении:', error);
+            alert("Ошибка при генерации речи. Попробуй позже.");
+        } finally {
+            // Верни кнопку
+            playBtn.disabled = false;
+            playBtn.textContent = '🔊 Слушать';
+        }
+    });
 });
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

@@ -169,8 +169,9 @@ document.getElementById('start-protection-btn').addEventListener('click', functi
         .then(response => response.json())
         .then(data => {
             if (data.questions && Array.isArray(data.questions)) {
-                sessionStorage.setItem('questions', JSON.stringify(data.questions));
-                window.location.href = 'api/answer';
+                document.getElementById('questions-input').value = JSON.stringify(data.questions);
+                document.getElementById('speaker-input').value = JSON.stringify(speakerInfo);
+                document.getElementById('to-answer-form').submit();
             } else {
                 alert('Не удалось получить вопросы.');
             }
