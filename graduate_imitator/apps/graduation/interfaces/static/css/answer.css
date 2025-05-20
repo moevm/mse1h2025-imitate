@@ -36,11 +36,13 @@ body {
 
 /* Основной контент - кнопка и таблица на одном уровне */
 .main-content {
-    flex: 1;
+    /* flex: 1; */
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
     padding: 20px;
+    gap: 20px;
 }
 
 .centered-content {
@@ -52,6 +54,15 @@ body {
 }
 
 .questions-block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #434343;
+    padding: 40px;
+}
+
+.end-protection-block {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -107,6 +118,15 @@ body {
 }
 
 .stop-record-btn {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    background-color: #3692D2;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.finish-protection-btn {
     font-size: 1.2rem;
     padding: 15px 30px;
     background-color: #3692D2;

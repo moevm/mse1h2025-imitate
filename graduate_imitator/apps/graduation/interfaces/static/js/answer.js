@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const dataElement = document.getElementById('answer-data');
-
     const container = document.querySelector('.questions-block');
     const template = document.getElementById('question-template');
 
@@ -13,87 +11,139 @@ document.addEventListener("DOMContentLoaded", function () {
     questions.forEach(question => {
         const clone = template.content.cloneNode(true);
         const questionEl = clone.querySelector('.generated-question');
+
+        // выпадашка с текстом вопроса
         const toggle = questionEl.querySelector('.question-toggle');
         const text = questionEl.querySelector('.question-text');
-
         toggle.addEventListener('click', () => {
             text.classList.toggle('hidden');
             toggle.innerText = text.classList.contains('hidden')
                 ? '🔽 Посмотреть текст вопроса'
                 : '🔼 Скрыть текст вопроса';
         });
-
-        questionEl.querySelector('.question-text').textContent = question.question_text;
+        text.textContent = question.question_text;
 
         const startBtn = clone.querySelector('.start-record-btn');
         const stopBtn = clone.querySelector('.stop-record-btn');
         const indicator = clone.querySelector('.recording-indicator');
+        const reviewBlock = document.querySelector('.audio-review-block');
+        const player = document.querySelector('.recorded-answer-player');
+        const finishBtn = document.querySelector('.finish-protection-btn');
 
-        startBtn.addEventListener('click', () => {
-            stopBtn.style.display = 'inline-block';
-            indicator.style.display = 'block';
+        let mediaRecorder;
+        let audioChunks = [];
+
+        // Фиксирование времени ответа
+        let questionPlayTime = null;  // когда воспроизводили вопрос
+        let recordStartTime = null;  // когда начали запись
+        let recordStopTime = null;  // когда остановили запись
+
+        // Кнопка слушать
+        const playBtn = clone.querySelector('.play-audio-btn');
+        const questionText = clone.querySelector('.question-text').innerText;
+        const audioPlayer = clone.getElementById('speaker-audio-player');
+        playBtn.addEventListener('click', async function () {
+            if (playBtn.dataset.audioLoaded === 'true') {
+                audioPlayer.play();
+                return;
+            }
+
+            try {
+                playBtn.disabled = true;
+                playBtn.textContent = '⏳ Готовим...';
+
+                const response = await fetch('/api/text-to-speech/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        text: questionText,
+                        speaker: speakerInfo.name,
+                        model_id: speakerInfo.model_id,
+                        language: speakerInfo.language
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка запроса к TTS API');
+                }
+
+                const data = await response.json();
+                const audioSrc = data.question_tts.audio_sample;
+
+                audioPlayer.src = audioSrc;
+                playBtn.dataset.audioLoaded = 'true';
+                audioPlayer.play();
+                questionPlayTime = new Date();  // фиксируем воспроизведение вопроса
+
+            } catch (error) {
+                console.error('Ошибка при воспроизведении:', error);
+                alert("Ошибка при генерации речи. Попробуй позже.");
+            } finally {
+                playBtn.disabled = false;
+                playBtn.textContent = '🔊 Слушать';
+            }
+        });
+
+        // Кнопка начать запись
+        startBtn.addEventListener('click', async () => {
+            recordStartTime = new Date();  // фиксируем старт записи
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) {
+                        audioChunks.push(e.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    recordStopTime = new Date();  // фиксируем остановку
+
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    player.src = audioUrl;
+                    reviewBlock.style.display = 'block';
+
+                    // Метрики
+                    const responseDelay = questionPlayTime
+                        ? ((recordStartTime - questionPlayTime) / 1000).toFixed(2)
+                        : null;
+                    const responseDuration = ((recordStopTime - recordStartTime) / 1000).toFixed(2);
+
+
+                    // пока просто логируем для отправки в будущем
+                    finishBtn.onclick = () => {
+                        console.log('Готово к отправке:');
+                        console.log('question_id:', question.id);
+                        console.log('audioBlob:', audioBlob);
+                        console.log('Время после первого прослушивания вопроса и до начала записи ответа (сек):', responseDelay);
+                        console.log('Длительность ответа (сек):', responseDuration);
+                    };
+                };
+
+                mediaRecorder.start();
+                stopBtn.style.display = 'inline-block';
+                indicator.style.display = 'block';
+            } catch (error) {
+                console.error('Ошибка доступа к микрофону:', error);
+                alert('Не удалось получить доступ к микрофону.');
+            }
         });
 
         stopBtn.addEventListener('click', () => {
+            mediaRecorder?.stop();
             stopBtn.style.display = 'none';
             indicator.style.display = 'none';
-            startBtn.style.display = 'inline-block';
         });
 
         container.appendChild(clone);
     });
 })
-
-document.addEventListener('DOMContentLoaded', function () {
-    const playBtn = document.querySelector('.play-audio-btn');
-    const questionText = document.querySelector('.question-text').innerText;
-    const audioPlayer = document.getElementById('speaker-audio-player');
-
-    playBtn.addEventListener('click', async function () {
-        if (playBtn.dataset.audioLoaded === 'true') {
-            audioPlayer.play();
-            return;
-        }
-
-        try {
-            playBtn.disabled = true;
-            playBtn.textContent = '⏳ Готовим...';
-
-            const response = await fetch('/api/text-to-speech/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({
-                    text: questionText,
-                    speaker: speakerInfo.name,
-                    model_id: speakerInfo.model_id,
-                    language: speakerInfo.language
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error('Ошибка запроса к TTS API');
-            }
-
-            const data = await response.json();
-            const audioSrc = data.question_tts.audio_sample;
-
-            audioPlayer.src = audioSrc;
-            playBtn.dataset.audioLoaded = 'true';
-            audioPlayer.play();
-
-        } catch (error) {
-            console.error('Ошибка при воспроизведении:', error);
-            alert("Ошибка при генерации речи. Попробуй позже.");
-        } finally {
-            // Верни кнопку
-            playBtn.disabled = false;
-            playBtn.textContent = '🔊 Слушать';
-        }
-    });
-});
 
 function getCookie(name) {
     let cookieValue = null;
