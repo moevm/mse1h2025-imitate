@@ -115,6 +115,16 @@ body {
     cursor: pointer;
 }
 
+.question-toggle {
+    cursor: pointer;
+    color: #fff;
+    text-decoration: underline;
+}
+
+.question-text.hidden {
+    display: none;
+}
+
 /* Блок для ошибок */
 .error {
     background-color: #ff4444;

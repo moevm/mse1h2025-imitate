@@ -14,19 +14,32 @@
             <template id="question-template">
                 <div class="generated-question">
                     <div class="horizontal-row centered-content">
-                        <div class="question-text">Текст вопроса...</div>
                         <button class="play-audio-btn">🔊 Слушать</button>
                         <audio id="speaker-audio-player"></audio>
                     </div>
+
+                    <div class="horizontal-row centered-content">
+                        <div class="question-toggle">🔽 Посмотреть текст вопроса</div>
+                    </div>
+
+                    <div class="question-text hidden centered-content">Текст вопроса...</div>
+
                     <div class="horizontal-row centered-content">
                         <button class="start-record-btn">🎤 Начать запись</button>
                         <button class="stop-record-btn" style="display: none;">⏹️ Остановить</button>
                     </div>
+
                     <div class="recording-indicator centered-content" style="display: none;">
                         Идет запись...
                     </div>
                 </div>
             </template>
+
+            <div class="audio-review-block centered-content" style="display: none;">
+                <audio controls class="recorded-answer-player"></audio>
+                <button class="finish-defense-btn">🏁 Завершить защиту</button>
+            </div>
+
         </div>
     </div>
 

@@ -12,7 +12,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     questions.forEach(question => {
         const clone = template.content.cloneNode(true);
-        clone.querySelector('.question-text').textContent = question.question_text;
+        const questionEl = clone.querySelector('.generated-question');
+        const toggle = questionEl.querySelector('.question-toggle');
+        const text = questionEl.querySelector('.question-text');
+
+        toggle.addEventListener('click', () => {
+            text.classList.toggle('hidden');
+            toggle.innerText = text.classList.contains('hidden')
+                ? '🔽 Посмотреть текст вопроса'
+                : '🔼 Скрыть текст вопроса';
+        });
+
+        questionEl.querySelector('.question-text').textContent = question.question_text;
 
         const startBtn = clone.querySelector('.start-record-btn');
         const stopBtn = clone.querySelector('.stop-record-btn');
@@ -39,8 +50,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const audioPlayer = document.getElementById('speaker-audio-player');
 
     playBtn.addEventListener('click', async function () {
+        if (playBtn.dataset.audioLoaded === 'true') {
+            audioPlayer.play();
+            return;
+        }
+
         try {
-            // Покажи загрузку (опционально)
             playBtn.disabled = true;
             playBtn.textContent = '⏳ Готовим...';
 
@@ -66,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const audioSrc = data.question_tts.audio_sample;
 
             audioPlayer.src = audioSrc;
+            playBtn.dataset.audioLoaded = 'true';
             audioPlayer.play();
 
         } catch (error) {
