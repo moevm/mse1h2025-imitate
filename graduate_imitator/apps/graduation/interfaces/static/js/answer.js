@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const container = document.querySelector('.questions-block');
     const template = document.getElementById('question-template');
+    const answersData = []; // для хранения всех ответов
 
     if (!questions.length) {
         document.getElementById('error-message').style.display = 'block';
@@ -11,6 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
     questions.forEach(question => {
         const clone = template.content.cloneNode(true);
         const questionEl = clone.querySelector('.generated-question');
+
+        // номер вопроса
+        const questionNumberHeader = document.createElement('h3');
+        questionNumberHeader.textContent = `Вопрос №${questions.indexOf(question) + 1}`;
+        questionNumberHeader.classList.add('centered-content');
+        questionEl.prepend(questionNumberHeader);
 
         // выпадашка с текстом вопроса
         const toggle = questionEl.querySelector('.question-toggle');
@@ -115,14 +122,24 @@ document.addEventListener("DOMContentLoaded", function () {
                         : null;
                     const responseDuration = ((recordStopTime - recordStartTime) / 1000).toFixed(2);
 
+                    answersData.push({
+                        question_id: question.id,
+                        audioBlob: audioBlob,
+                        responseDelay: responseDelay,
+                        responseDuration: responseDuration
+                    });
+
 
                     // пока просто логируем для отправки в будущем
                     finishBtn.onclick = () => {
-                        console.log('Готово к отправке:');
-                        console.log('question_id:', question.id);
-                        console.log('audioBlob:', audioBlob);
-                        console.log('Время после первого прослушивания вопроса и до начала записи ответа (сек):', responseDelay);
-                        console.log('Длительность ответа (сек):', responseDuration);
+                        console.log('Все собранные ответы:');
+                        answersData.forEach((answer, idx) => {
+                            console.log('question_id:', answer.question_id);
+                            console.log('audioBlob:', answer.audioBlob);
+                            console.log('responseDelay (сек):', answer.responseDelay);
+                            console.log('responseDuration (сек):', answer.responseDuration);
+                            console.log('-----------------------------');
+                        });
                     };
                 };
 

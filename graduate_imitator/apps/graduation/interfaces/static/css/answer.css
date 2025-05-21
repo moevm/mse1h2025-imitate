@@ -79,6 +79,7 @@ body {
     color: #fff;
     border: none;
     cursor: pointer;
+    margin-bottom: 20px;
 }
 
 .question-text {
