@@ -29,6 +29,10 @@
                         <button class="stop-record-btn" style="display: none;">⏹️ Остановить</button>
                     </div>
 
+                    <div class="answer-is-given centered-content" style="display: none;">
+                        Ответ на вопрос был записан!
+                    </div>
+
                     <div class="recording-indicator centered-content" style="display: none;">
                         Идет запись...
                     </div>
@@ -36,12 +40,12 @@
             </template>
         </div>
 
-        <div class="end-protection-block">
-            <div class="audio-review-block centered-content" style="display: none;">
+        <div class="end-protection-block centered-content" style="display: none;">
+            <div class="audio-review-block centered-content">
                 <p>Прослушайте полученные записи</p>
                 <audio controls class="recorded-answer-player"></audio>
             </div>
-            <div>
+            <div class="centered-content">
                 <button class="finish-protection-btn">🏁 Завершить защиту</button>
             </div>
         </div>

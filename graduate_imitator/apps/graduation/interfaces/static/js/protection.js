@@ -23,7 +23,8 @@ document.getElementById('process-btn').addEventListener('click', async () => {
         const data = await response.json();
 
         if (response.ok) {
-            console.log('Ключевые слова:', data);
+            // console.log('Ключевые слова:', data);
+
             extractedKeywords = data.keywords || [];
             window.keywords = extractedKeywords;
 
@@ -31,7 +32,7 @@ document.getElementById('process-btn').addEventListener('click', async () => {
                 alert('Ключевые слова из презентации получены!');
             }
 
-            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('process-btn').disabled = 'true';
 
         } else {
             showError(data.error_msg || 'Неизвестная ошибка');
@@ -43,7 +44,7 @@ document.getElementById('process-btn').addEventListener('click', async () => {
 
 function showError(error) {
     const errorDiv = document.getElementById('error-message');
-    errorDiv.style.display = 'inline-block';
+    errorDiv.style.display = 'block';
     errorDiv.querySelector('p').textContent = 'Ошибка: ' + error;
 
     errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -145,14 +146,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-document.getElementById('start-protection-btn').addEventListener('click', function () {
+document.getElementById('start-protection-btn').addEventListener('click', async function (event) {
     const selectedSpeaker = document.querySelector('.speaker-card.selected');
-    if (!selectedSpeaker) {
-        alert('Пожалуйста, выберите спикера.');
-        return;
-    }
-
-    if (!window.keywords || !window.keywords.length) {
+    event.preventDefault();
+    if (!Array.isArray(window.keywords) || window.keywords.length === 0) {
         alert('Ключевые слова не найдены. Сначала обработайте презентацию.');
         return;
     }

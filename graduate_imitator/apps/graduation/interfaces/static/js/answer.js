@@ -3,13 +3,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const template = document.getElementById('question-template');
     const answersData = []; // для хранения всех ответов
 
+    console.log('questions=', questions);
+    console.log('speakerInfo=', speakerInfo);
+
     if (!questions.length) {
-        document.getElementById('error-message').style.display = 'block';
+        document.getElementById('error-message').style.display = 'inline-block';
         document.querySelector('#error-message p').textContent = 'Вопросы не найдены. Попробуйте начать защиту заново.';
         return;
     }
 
-    questions.forEach(question => {
+    let currentQuestionIndex = 0;
+
+    function showNextQuestion() {
+        const question = questions[currentQuestionIndex];
         const clone = template.content.cloneNode(true);
         const questionEl = clone.querySelector('.generated-question');
 
@@ -35,7 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const indicator = clone.querySelector('.recording-indicator');
         const reviewBlock = document.querySelector('.audio-review-block');
         const player = document.querySelector('.recorded-answer-player');
-        const finishBtn = document.querySelector('.finish-protection-btn');
 
         let mediaRecorder;
         let audioChunks = [];
@@ -47,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Кнопка слушать
         const playBtn = clone.querySelector('.play-audio-btn');
+        const answerIsGiven = clone.querySelector('.answer-is-given');
         const questionText = clone.querySelector('.question-text').innerText;
         const audioPlayer = clone.getElementById('speaker-audio-player');
         playBtn.addEventListener('click', async function () {
@@ -87,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             } catch (error) {
                 console.error('Ошибка при воспроизведении:', error);
-                alert("Ошибка при генерации речи. Попробуй позже.");
+                alert("Ошибка при генерации речи.");
             } finally {
                 playBtn.disabled = false;
                 playBtn.textContent = '🔊 Слушать';
@@ -129,18 +135,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         responseDuration: responseDuration
                     });
 
+                    currentQuestionIndex += 1;
 
-                    // пока просто логируем для отправки в будущем
-                    finishBtn.onclick = () => {
-                        console.log('Все собранные ответы:');
-                        answersData.forEach((answer, idx) => {
-                            console.log('question_id:', answer.question_id);
-                            console.log('audioBlob:', answer.audioBlob);
-                            console.log('responseDelay (сек):', answer.responseDelay);
-                            console.log('responseDuration (сек):', answer.responseDuration);
-                            console.log('-----------------------------');
-                        });
-                    };
+                    if (currentQuestionIndex < questions.length) {
+                        showNextQuestion();
+                    } else {
+                        // Все вопросы пройдены — показываем кнопку и аудиоплеер
+                        setupAudioReview();
+                    }
                 };
 
                 mediaRecorder.start();
@@ -154,12 +156,58 @@ document.addEventListener("DOMContentLoaded", function () {
 
         stopBtn.addEventListener('click', () => {
             mediaRecorder?.stop();
+            startBtn.style.display = "none";
+            answerIsGiven.style.display = "block";
             stopBtn.style.display = 'none';
             indicator.style.display = 'none';
         });
 
         container.appendChild(clone);
-    });
+    }
+
+    function setupAudioReview() {
+        const reviewBlock = document.querySelector('.audio-review-block');
+        const finishBtn = document.querySelector('.finish-protection-btn');
+        const endProtectionBlock = document.querySelector('.end-protection-block');
+
+        endProtectionBlock.style.display = "inline-block";
+
+        reviewBlock.innerHTML = ''; // Очистим на всякий случай
+
+        answersData.forEach((answer, index) => {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('audio-answer-wrapper');
+            wrapper.style.marginBottom = '1em';
+
+            const label = document.createElement('p');
+            label.textContent = `Запись ответа на вопрос №${index + 1}`;
+            label.style.fontWeight = 'bold';
+
+            const audio = document.createElement('audio');
+            audio.controls = true;
+            audio.src = URL.createObjectURL(answer.audioBlob);
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(audio);
+            reviewBlock.appendChild(wrapper);
+        });
+
+        reviewBlock.style.display = 'block';
+        finishBtn.style.display = 'block';
+
+        finishBtn.onclick = () => {
+            console.log('Все собранные ответы:');
+            answersData.forEach((answer, idx) => {
+                console.log('question_id:', answer.question_id);
+                console.log('audioBlob:', answer.audioBlob);
+                console.log('responseDelay (сек):', answer.responseDelay);
+                console.log('responseDuration (сек):', answer.responseDuration);
+                console.log('-----------------------------');
+            });
+        };
+    }
+
+    showNextQuestion();
 })
 
 function getCookie(name) {
