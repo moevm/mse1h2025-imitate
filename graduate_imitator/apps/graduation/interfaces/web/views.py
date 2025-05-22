@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from json import loads, JSONDecodeError
 from json import dumps as json_dumps
 from pathlib import Path
+import json
 
 
 class RegisterWebView(View):
@@ -65,6 +66,7 @@ if len(results) > 10:
         AttemptRepository.delete_attempt(r.id)
 """
 
+
 class HomeWebView(View):
     def get(self, request):
         context = {}
@@ -74,3 +76,35 @@ class HomeWebView(View):
             except JSONDecodeError:
                 context = {}
         return render(request, "home/home.html", context)
+    
+
+class ProtectionWebView(View):
+    def get(self, request):
+        context = {}
+        if 'context_for_front' in request.GET:
+            try:
+                context = loads(request.GET['context_for_front'])
+            except JSONDecodeError:
+                context = {}
+        return render(request, "protection/protection.html", context)
+    
+
+class AnswerWebView(View):
+    def get(self, request):
+        return redirect("web-protection")  # если напрямую зашёл
+
+    def post(self, request):
+        context = {}
+        try:
+            questions = loads(request.POST.get("questions", "[]"))
+            speaker_info = loads(request.POST.get("speakerInfo", "{}"))
+        except JSONDecodeError:
+            questions = []
+            speaker_info = {}
+
+        context = {
+                'questions': questions,
+                'speakerInfo': speaker_info,
+            }
+
+        return render(request, "protection/answer.html", context)

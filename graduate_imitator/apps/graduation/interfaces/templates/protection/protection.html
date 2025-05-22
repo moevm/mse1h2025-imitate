@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Защита{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type='text/css' href="{% static 'css/protection.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="main-content">
+        <div class="protection-block">
+            <h3>Загрузите презентацию дипломной работы</h3>
+            <div class="input-block">
+                <input type="file" id="presentation-upload" class="file-input" accept=".pptx">
+            </div>
+
+            <div class="input-block">
+                <button class="process-btn" id="process-btn">Обработать</button>
+            </div>
+
+            <div class="speakers-demo">
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Настройки спикеров</h3>
+                <div class="speakers-container">
+                    <div id="speakers-loader" class="loader-container">
+                        <div class="speakers-loader">
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                        </div>
+                        <p class="loader-text">Загружаем голоса...</p>
+                    </div>
+                    <div id="speakers-list" style="display: none;"></div>
+                </div>
+                <audio id="speaker-audio-player"></audio>
+            </div>
+
+            <div class="input-block">
+                <form id="to-answer-form" method="POST" action="{% url 'web-answer' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="questions" id="questions-input">
+                    <input type="hidden" name="speakerInfo" id="speaker-input">
+                    <button type="submit" class="start-protection-btn" id="start-protection-btn" style="display: none;">Сгенерировать вопросы</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="error-message" class="error centered-content" style="display: none;">
+        <p></p>
+    </div>
+</div>
+
+<script src="{% static 'js/protection.js' %}"></script>
+
+{% endblock %}

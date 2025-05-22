@@ -3,7 +3,8 @@ from graduate_imitator.apps.graduation.api.views.results_api import *
 from graduate_imitator.apps.graduation.api.views.protection_api import *
 from graduate_imitator.apps.graduation.api.views.analysis_api import *
 from graduate_imitator.apps.graduation.interfaces.web.views import *
-from graduate_imitator.apps.graduation.api.views.presentation import load_presentation
+from graduate_imitator.apps.graduation.api.views.presentation_api import *
+from graduate_imitator.apps.graduation.api.views.speaker_presets import speaker_presets
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import permissions
@@ -12,6 +13,7 @@ from drf_yasg import openapi
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
+from graduate_imitator.apps.graduation.api.views.answer_api import *
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -38,10 +40,13 @@ urlpatterns = [
     path('api/users/login', LoginAPIView.as_view(), name='api-login'),
     path('api/users/logout', LogoutAPIView.as_view(), name='api-logout'),
     path('api/users/get-results-for-profile', GetResultsProfileAPIView.as_view(), name='api-get-results-for-profile'),
-    path('api/presentation/load', load_presentation),
+    path('api/presentation/extract_keywords', upload_presentation_and_extract_keywords, name='extract_keywords'),
     path('api/start-protection', StartProtectionAPIView.as_view(), name='start-protection'),
+    path('api/answer', AnswerWebView.as_view(), name='answer'),
+    path('api/text-to-speech/', TextToSpeechAPIView.as_view(), name='text-to-speech'),
     path('api/get-results', GetResultsAPIView.as_view(), name='get-results'),
     path('api/get_user_status', UserStatusAPIView.as_view(), name='get-status'),
+    path('api/speaker-presets', speaker_presets),
     path('api/analyze_answers', AnalyzeUserAnswers.as_view(), name='api-analyze-answers'),
 
     # Web Views
@@ -49,9 +54,12 @@ urlpatterns = [
     path('register', RegisterWebView.as_view(), name='web-register'),
     path('login', LoginWebView.as_view(), name='web-login'),
     path('profile', ProfileWebView.as_view(), name='web-profile'),
+    path('protection', ProtectionWebView.as_view(), name='web-protection'),
+    path('answer', AnswerWebView.as_view(), name='web-answer'),
     
     #Swagger
     path('api/schema', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='spectacular-swagger-ui'),
     path('swagger', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('admin', admin.site.urls),
