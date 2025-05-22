@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from graduate_imitator.apps.graduation.domain.repositories.question_repository import QuestionRepository
+from graduate_imitator.apps.graduation.api.serializers.questions import QuestionSerializer
 
 class StartProtectionAPIView(APIView):
     @extend_schema(
@@ -61,8 +62,9 @@ class StartProtectionAPIView(APIView):
             raw = request.query_params.get("keywords", "")
             keywords = [kw.strip() for kw in raw.split(",") if kw.strip()]
             questions = QuestionRepository.get_questions_by_keywords_any(keywords)
+            serializer = QuestionSerializer(questions, many=True)
             return Response(
-                {"message": "Защита началась", "questions": list(questions)},
+                {"message": "Защита началась", "questions": serializer.data},
                 status=status.HTTP_200_OK
             )
         except Exception as e:

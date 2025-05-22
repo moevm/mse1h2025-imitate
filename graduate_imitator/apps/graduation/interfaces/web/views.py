@@ -5,7 +5,10 @@ from django.shortcuts import render, redirect
 from json import loads, JSONDecodeError
 from json import dumps as json_dumps
 from pathlib import Path
+import json
 
+from graduate_imitator.apps.graduation.domain.effects.abstract.EffectBase import EffectBase
+from graduate_imitator.apps.graduation.domain.effects import *
 
 class RegisterWebView(View):
     def get(self, request):
@@ -86,3 +89,27 @@ class ProtectionWebView(View):
             except JSONDecodeError:
                 context = {}
         return render(request, "protection/protection.html", context)
+    
+
+class AnswerWebView(View):
+    def get(self, request):
+        return redirect("web-protection")  # если напрямую зашёл
+
+    def post(self, request):
+        context = {}
+        try:
+            questions = loads(request.POST.get("questions", "[]"))
+            speaker_info = loads(request.POST.get("speakerInfo", "{}"))
+        except JSONDecodeError:
+            questions = []
+            speaker_info = {}
+
+        print(EffectBase.__subclasses__())
+
+        context = {
+                'questions': questions,
+                'speakerInfo': speaker_info,
+                'effects': EffectBase.__subclasses__()
+        }
+
+        return render(request, "protection/answer.html", context)
