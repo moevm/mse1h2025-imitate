@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function showNextQuestion() {
         const question = questions[currentQuestionIndex];
         const clone = template.content.cloneNode(true);
-        const questionEl = clone.querySelector('.generated-question');
+        const questionEl = clone.querySelector('.question-container');
+        const effectsContainer = clone.querySelector('.effects-container');
 
         // номер вопроса
         const questionNumberHeader = document.createElement('h3');
@@ -62,6 +63,17 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             try {
+
+                var effects = effectsContainer.querySelectorAll('.effect-card input');
+                var effects_values = [];
+                effects.forEach(effect => {
+                    if(effect.getAttribute('type') == 'range'){
+                        effects_values.push(parseFloat(effect.value));
+                    } else{
+                        effects_values.push(effect.checked);
+                    }
+                    
+                });
                 playBtn.disabled = true;
                 playBtn.textContent = '⏳ Готовим...';
 
@@ -75,7 +87,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         text: questionText,
                         speaker: speakerInfo.name,
                         model_id: speakerInfo.model_id,
-                        language: speakerInfo.language
+                        language: speakerInfo.language,
+                        effects: effects_values
                     })
                 });
 

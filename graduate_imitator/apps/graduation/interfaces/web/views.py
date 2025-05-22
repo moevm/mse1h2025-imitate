@@ -7,6 +7,8 @@ from json import dumps as json_dumps
 from pathlib import Path
 import json
 
+from graduate_imitator.apps.graduation.domain.effects.abstract.EffectBase import EffectBase
+from graduate_imitator.apps.graduation.domain.effects import *
 
 class RegisterWebView(View):
     def get(self, request):
@@ -102,9 +104,12 @@ class AnswerWebView(View):
             questions = []
             speaker_info = {}
 
+        print(EffectBase.__subclasses__())
+
         context = {
                 'questions': questions,
                 'speakerInfo': speaker_info,
-            }
+                'effects': EffectBase.__subclasses__()
+        }
 
         return render(request, "protection/answer.html", context)

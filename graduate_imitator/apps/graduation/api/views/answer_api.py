@@ -8,6 +8,10 @@ import io
 import soundfile as sf
 import json
 from graduate_imitator.apps.graduation.api.views.speaker_presets import convert_tensor_to_base64
+from graduate_imitator.apps.graduation.domain.effects.abstract.EffectBase import EffectBase
+from graduate_imitator.apps.graduation.domain.effects.abstract.TextEffect import TextEffect
+from graduate_imitator.apps.graduation.domain.effects.abstract.AudioEffect import AudioEffect
+from graduate_imitator.apps.graduation.domain.effects import *
 
 class TextToSpeechAPIView(APIView):
     def post(self, request, *args, **kwargs):
@@ -17,17 +21,31 @@ class TextToSpeechAPIView(APIView):
             speaker = data.get('speaker')
             model_id = data.get('model_id')
             language = data.get('language')
+            effects_values = data.get('effects')
 
             if not all([text, speaker, model_id, language]):
                 return Response({'error': 'Missing parameters'}, status=status.HTTP_400_BAD_REQUEST)
 
             tts = TextToSpeechService(language='ru', model_id='v4_ru', speaker=speaker)
+            effect_classes = EffectBase.__subclasses__()
+            for i, effect_class in enumerate(effect_classes):
+                if issubclass(effect_class, TextEffect) and effects_values[i]:
+                    text = effect_class().apply(text)
+
+            audio = tts.get_speech_by_text(text)
+            for i, effect_class in enumerate(effect_classes):
+                if issubclass(effect_class, AudioEffect) and effects_values[i]:
+                    if effect_class == ChangeSpeedEffect:
+                        audio = effect_class().apply(audio, tts.sample_rate, effects_values[i])
+                    else:
+                        audio = effect_class().apply(audio, tts.sample_rate)
+
             question_tts = {
                     'name': speaker,
                     'model_id': 'v4_ru',
                     'language': 'ru',
                     'audio_sample': convert_tensor_to_base64(
-                        tts.get_speech_by_text(text),
+                        audio,
                         tts.sample_rate
                     )
                 }

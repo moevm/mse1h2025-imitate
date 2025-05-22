@@ -13,28 +13,38 @@
         <div class="questions-block">
             <template id="question-template">
                 <div class="generated-question">
-                    <div class="horizontal-row centered-content">
-                        <button class="play-audio-btn">🔊 Слушать</button>
-                        <audio id="speaker-audio-player"></audio>
+                    <div class="question-container">
+                        <div class="horizontal-row centered-content">
+                            <button class="play-audio-btn">🔊 Слушать</button>
+                            <audio id="speaker-audio-player"></audio>
+                        </div>
+    
+                        <div class="horizontal-row centered-content">
+                            <div class="question-toggle">🔽 Посмотреть текст вопроса</div>
+                        </div>
+    
+                        <div class="question-text hidden centered-content">Текст вопроса...</div>
+    
+                        <div class="horizontal-row centered-content">
+                            <button class="start-record-btn">🎤 Начать запись</button>
+                            <button class="stop-record-btn" style="display: none;">⏹️ Остановить</button>
+                        </div>
+    
+                        <div class="answer-is-given centered-content" style="display: none;">
+                            Ответ на вопрос был записан!
+                        </div>
+    
+                        <div class="recording-indicator centered-content" style="display: none;">
+                            Идет запись...
+                        </div>
                     </div>
-
-                    <div class="horizontal-row centered-content">
-                        <div class="question-toggle">🔽 Посмотреть текст вопроса</div>
-                    </div>
-
-                    <div class="question-text hidden centered-content">Текст вопроса...</div>
-
-                    <div class="horizontal-row centered-content">
-                        <button class="start-record-btn">🎤 Начать запись</button>
-                        <button class="stop-record-btn" style="display: none;">⏹️ Остановить</button>
-                    </div>
-
-                    <div class="answer-is-given centered-content" style="display: none;">
-                        Ответ на вопрос был записан!
-                    </div>
-
-                    <div class="recording-indicator centered-content" style="display: none;">
-                        Идет запись...
+                    <div class="effects-container">
+                        {% for effect in effects %}
+                            <div class="effect-card">
+                                {{ effect.input_tag | safe }}
+                                <label class="effect-name" for="effect-{{ effect.id }}">{{ effect.name }}</label>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </template>
