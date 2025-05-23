@@ -195,16 +195,54 @@ document.addEventListener("DOMContentLoaded", function () {
         reviewBlock.style.display = 'block';
         finishBtn.style.display = 'block';
 
+
+
         finishBtn.onclick = () => {
-            console.log('Все собранные ответы:');
-            answersData.forEach((answer, idx) => {
-                console.log('question_id:', answer.question_id);
-                console.log('audioBlob:', answer.audioBlob);
-                console.log('responseDelay (сек):', answer.responseDelay);
-                console.log('responseDuration (сек):', answer.responseDuration);
-                console.log('-----------------------------');
+            const formData = new FormData();
+
+            console.log(answersData);
+
+            answersData.forEach((answer, index) => {
+//                console.log('Adding answer:', answer); // Логируем ответ перед добавлением
+
+                formData.append(`answers[${index}][question_id]`, answer.question_id);
+                formData.append(`answers[${index}][responseDelay]`, answer.responseDelay);
+                formData.append(`answers[${index}][responseDuration]`, answer.responseDuration);
+                formData.append(`answers[${index}][audioBlob]`, answer.audioBlob);
+            });
+
+            formData.append(`length`, answersData.length)
+
+//            // Логируем содержимое formData
+//            for (let [key, value] of formData.entries()) {
+//                console.log(key, value);
+//            }
+            console.log(formData);
+
+            const csrfToken = getCookie('csrftoken'); // Получаем CSRF-токен
+
+            fetch('api/analyze_answers', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken // Добавляем CSRF-токен в заголовок
+                    // Не указываем 'Content-Type', так как браузер сам установит его для FormData
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Данные успешно отправлены:', data);
+            })
+            .catch(error => {
+                console.error('Ошибка при отправке данных:', error);
             });
         };
+
     }
 
     showNextQuestion();

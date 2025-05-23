@@ -7,7 +7,7 @@ class SpeechToTextService:
     def __init__(self, model_name: str = "base"):
         try:
             self.device = "cuda" if torch.cuda.is_available() else "cpu"
-            self.model = whisper.load_model(model_name).to(self.device)
+            self.model = whisper.load_model(model_name)
         except Exception as e:
             raise Exception(f"Error loading Whisper model: {e}")
 

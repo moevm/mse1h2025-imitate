@@ -41,3 +41,4 @@ pydantic_core==2.33.1
 openai-whisper==20240930
 scikit-learn==1.4.0
 spacy==3.8.5
+pydub==0.25.1
