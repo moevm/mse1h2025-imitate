@@ -237,11 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: formData
             })
             .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;  // <--- Вот ключ
-                } else {
-                    return response.json();
-                }
+                window.location.href = response.url;  // <--- Вот ключ
             })
             .then(data => {
                 if (data?.error) {
