@@ -9,8 +9,8 @@ class AttemptRepository:
     @staticmethod
     def create_attempt(user_id, presentation_id, start_time, end_time, score, completed):
         attempt = Attempt(
-            user_id=user_id,
-            presentation_id=presentation_id,
+            user_id_id=user_id,
+            presentation_id_id=presentation_id,
             start_time=start_time,
             end_time=end_time,
             score=score,

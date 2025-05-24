@@ -10,7 +10,7 @@ class PresentationRepository:
     @staticmethod
     def create_presentation(user_id, title, file_path):
         presentation = Presentation(
-            user_id=user_id,
+            user_id_id=user_id,
             title=title,
             file_path=file_path
         )

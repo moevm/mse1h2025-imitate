@@ -3,6 +3,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const template = document.getElementById('question-template');
     const answersData = []; // для хранения всех ответов
 
+    // Предполагается, что currentPresentationId будет доступен глобально,
+    // установлен Django темплейтом, как questions и speakerInfo
+    let attemptStartTime = null; // Будет установлено при показе первого вопроса
+
     console.log('questions=', questions);
     console.log('speakerInfo=', speakerInfo);
 
@@ -15,6 +19,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentQuestionIndex = 0;
 
     function showNextQuestion() {
+        if (currentQuestionIndex === 0) {
+            attemptStartTime = new Date().toISOString(); // Фиксируем время начала первой попытки вопроса
+        }
+
         const question = questions[currentQuestionIndex];
         const clone = template.content.cloneNode(true);
         const questionEl = clone.querySelector('.question-container');
@@ -185,7 +193,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         endProtectionBlock.style.display = "inline-block";
 
-        reviewBlock.innerHTML = ''; // Очистим на всякий случай
+        reviewBlock.innerHTML = '';
 
         answersData.forEach((answer, index) => {
             const wrapper = document.createElement('div');
@@ -208,26 +216,32 @@ document.addEventListener("DOMContentLoaded", function () {
         reviewBlock.style.display = 'block';
         finishBtn.style.display = 'block';
 
-
-
         finishBtn.onclick = () => {
             const formData = new FormData();
 
-            console.log(answersData);
+            if (typeof currentPresentationId === 'undefined' || currentPresentationId === null) {
+                alert("Ошибка: ID презентации не найден. Невозможно сохранить попытку.");
+                console.error("presentation_id is missing, cannot save attempt.");
+                return; // Прерываем отправку
+            }
+            if (!attemptStartTime) {
+                alert("Ошибка: Время начала попытки не найдено. Невозможно сохранить попытку.");
+                console.error("start_time is missing, cannot save attempt.");
+                return; // Прерываем отправку
+            }
 
             answersData.forEach((answer, index) => {
-
                 formData.append(`answers[${index}][question_id]`, answer.question_id);
                 formData.append(`answers[${index}][responseDelay]`, answer.responseDelay);
                 formData.append(`answers[${index}][responseDuration]`, answer.responseDuration);
                 formData.append(`answers[${index}][audioBlob]`, answer.audioBlob);
             });
 
-            formData.append(`length`, answersData.length)
+            formData.append(`length`, answersData.length);
+            formData.append('presentation_id', currentPresentationId);
+            formData.append('start_time', attemptStartTime);
 
-            console.log(formData);
-
-            const csrfToken = getCookie('csrftoken'); // Получаем CSRF-токен
+            const csrfToken = getCookie('csrftoken');
 
             fetch('api/analyze_answers', {
                 method: 'POST',
@@ -237,11 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: formData
             })
             .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;  // <--- Вот ключ
-                } else {
-                    return response.json();
-                }
+                window.location.href = response.url;
             })
             .then(data => {
                 if (data?.error) {
@@ -252,7 +262,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error('Ошибка при отправке данных:', error);
             });
         };
-
     }
 
     showNextQuestion();

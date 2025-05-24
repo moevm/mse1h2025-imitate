@@ -17,6 +17,8 @@ import json
 from graduate_imitator.apps.graduation.domain.repositories.question_repository import *
 from graduate_imitator.apps.graduation.domain.services.speech_to_text_service import *
 from graduate_imitator.apps.graduation.domain.repositories.question_repository import QuestionRepository
+from graduate_imitator.apps.graduation.domain.repositories.attempt_repository import AttemptRepository
+from datetime import datetime
 
 audio_parser = SpeechToTextService()
 
@@ -96,13 +98,31 @@ class AnalyzeUserAnswers(APIView):
         duration_percentage = sum(response_durations) / len(response_durations) * 100
         overall_percentage = (keywords_percentage + delay_percentage + duration_percentage) / 3
 
-        # return Response(
-        #     {"overall": overall_percentage,
-        #      "keywords_percentage": keywords_percentage,
-        #      "delay_percentage": delay_percentage,
-        #      "duration_percentage": duration_percentage},
-        #     status=status.HTTP_200_OK
-        # )
+        try:
+            user_id = request.user.id
+            presentation_id = request.POST.get("presentation_id")
+            start_time_iso = request.POST.get("start_time")
+
+            if not presentation_id or not start_time_iso:
+                print("Error: presentation_id or start_time missing, cannot save attempt.") 
+            else:
+                start_time = datetime.fromisoformat(start_time_iso.replace("Z", "+00:00")) 
+                end_time = datetime.now()
+                score = int(round(overall_percentage))
+                completed = True
+
+                AttemptRepository.create_attempt(
+                    user_id=user_id,
+                    presentation_id=int(presentation_id),
+                    start_time=start_time,
+                    end_time=end_time,
+                    score=score,
+                    completed=completed
+                )
+                print(f"Attempt saved for user {user_id}, presentation {presentation_id}") 
+        except Exception as e:
+            print(f"Error saving attempt to database: {e}") 
+            pass
 
         results = {"overall": overall_percentage,
                    "keywords_percentage": keywords_percentage,
