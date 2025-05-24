@@ -7,44 +7,22 @@
 
 {% block styles %}
     <link rel="stylesheet" type='text/css' href="{% static 'css/protection.css' %}">
+    <link rel="stylesheet" type='text/css' href="{% static 'css/results.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Результаты анализа</h1>
-    <div id="analysis-results">
-        <p id="overall-score">Общий балл: <span id="overall-value">0</span></p>
-        <p id="keywords-percentage">Процент ключевых слов: <span id="keywords-value">0</span>%</p>
-        <p id="delay-percentage">Процент задержки: <span id="delay-value">0</span>%</p>
-        <p id="duration-percentage">Процент длительности: <span id="duration-value">0</span>%</p>
+<div class="results-wrapper">
+    <div class="results-container">
+        <h2>Результаты анализа</h2>
+        <p>Общая оценка: {{ results.overall }}%</p>
+        <p>Ключевые слова: {{ results.keywords_percentage }}%</p>
+        <p>Задержка ответа: {{ results.delay_percentage }}%</p>
+        <p>Длительность ответа: {{ results.duration_percentage }}%</p>
     </div>
-    <button id="fetch-results-btn">Получить результаты</button>
 </div>
 
-<script>
-    document.getElementById('fetch-results-btn').addEventListener('click', async function() {
-        try {
-            const response = await fetch('/api/analyze_answers', {
-                method: 'GET',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                }
-            });
 
-            if (!response.ok) {
-                throw new Error('Ошибка при получении данных');
-            }
 
-            const data = await response.json();
-            document.getElementById('overall-value').textContent = data.overall;
-            document.getElementById('keywords-value').textContent = data.keywords_percentage;
-            document.getElementById('delay-value').textContent = data.delay_percentage;
-            document.getElementById('duration-value').textContent = data.duration_percentage;
-        } catch (error) {
-            console.error('Ошибка:', error);
-            alert('Не удалось получить результаты анализа.');
-        }
-    });
-</script>
+
 {% endblock %}

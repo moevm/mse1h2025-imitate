@@ -115,13 +115,5 @@ class ResultsWebView(View):
     #     return redirect("web-protection")  # если напрямую зашёл
 
     def get(self, request):
-        try:
-            results = loads(request.POST.get("results", "{}}"))
-        except JSONDecodeError:
-            results = {}
-
-        context = {
-                'results': results,
-            }
-
-        return render(request, "protection/results.html", context)
+        results = request.session.get("results", {})
+        return render(request, "protection/results.html", {'results': results})
