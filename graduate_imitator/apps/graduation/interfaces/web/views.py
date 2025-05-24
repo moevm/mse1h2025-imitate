@@ -113,3 +113,12 @@ class AnswerWebView(View):
         }
 
         return render(request, "protection/answer.html", context)
+
+
+class ResultsWebView(View):
+    # def get(self, request):
+    #     return redirect("web-protection")  # если напрямую зашёл
+
+    def get(self, request):
+        results = request.session.get("results", {})
+        return render(request, "protection/results.html", {'results': results})

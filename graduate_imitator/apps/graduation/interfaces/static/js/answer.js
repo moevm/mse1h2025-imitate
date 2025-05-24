@@ -208,16 +208,51 @@ document.addEventListener("DOMContentLoaded", function () {
         reviewBlock.style.display = 'block';
         finishBtn.style.display = 'block';
 
+
+
         finishBtn.onclick = () => {
-            console.log('Все собранные ответы:');
-            answersData.forEach((answer, idx) => {
-                console.log('question_id:', answer.question_id);
-                console.log('audioBlob:', answer.audioBlob);
-                console.log('responseDelay (сек):', answer.responseDelay);
-                console.log('responseDuration (сек):', answer.responseDuration);
-                console.log('-----------------------------');
+            const formData = new FormData();
+
+            console.log(answersData);
+
+            answersData.forEach((answer, index) => {
+
+                formData.append(`answers[${index}][question_id]`, answer.question_id);
+                formData.append(`answers[${index}][responseDelay]`, answer.responseDelay);
+                formData.append(`answers[${index}][responseDuration]`, answer.responseDuration);
+                formData.append(`answers[${index}][audioBlob]`, answer.audioBlob);
+            });
+
+            formData.append(`length`, answersData.length)
+
+            console.log(formData);
+
+            const csrfToken = getCookie('csrftoken'); // Получаем CSRF-токен
+
+            fetch('api/analyze_answers', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                body: formData
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;  // <--- Вот ключ
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                if (data?.error) {
+                    alert("Ошибка анализа: " + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка при отправке данных:', error);
             });
         };
+
     }
 
     showNextQuestion();

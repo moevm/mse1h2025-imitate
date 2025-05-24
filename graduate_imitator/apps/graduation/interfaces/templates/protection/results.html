@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Результаты ответов
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" type='text/css' href="{% static 'css/protection.css' %}">
+    <link rel="stylesheet" type='text/css' href="{% static 'css/results.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
+
+{% block content %}
+<div class="results-wrapper">
+    <div class="results-container">
+        <h2>Результаты анализа</h2>
+        <p>Общая оценка: {{ results.overall }}%</p>
+        <p>Ключевые слова: {{ results.keywords_percentage }}%</p>
+        <p>Задержка ответа: {{ results.delay_percentage }}%</p>
+        <p>Длительность ответа: {{ results.duration_percentage }}%</p>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

@@ -1,6 +1,7 @@
 from graduate_imitator.apps.graduation.api.views.auth_api import *
 from graduate_imitator.apps.graduation.api.views.results_api import *
 from graduate_imitator.apps.graduation.api.views.protection_api import *
+from graduate_imitator.apps.graduation.api.views.analysis_api import *
 from graduate_imitator.apps.graduation.interfaces.web.views import *
 from graduate_imitator.apps.graduation.api.views.presentation_api import *
 from graduate_imitator.apps.graduation.api.views.speaker_presets import speaker_presets
@@ -46,6 +47,7 @@ urlpatterns = [
     path('api/get-results', GetResultsAPIView.as_view(), name='get-results'),
     path('api/get_user_status', UserStatusAPIView.as_view(), name='get-status'),
     path('api/speaker-presets', speaker_presets),
+    path('api/analyze_answers', AnalyzeUserAnswers.as_view(), name='api-analyze-answers'),
 
     # Web Views
     path('', HomeWebView.as_view(), name='home'),
@@ -54,6 +56,7 @@ urlpatterns = [
     path('profile', ProfileWebView.as_view(), name='web-profile'),
     path('protection', ProtectionWebView.as_view(), name='web-protection'),
     path('answer', AnswerWebView.as_view(), name='web-answer'),
+    path('results', ResultsWebView.as_view(), name='web-results'),
     
     #Swagger
     path('api/schema', SpectacularAPIView.as_view(), name='schema'),
