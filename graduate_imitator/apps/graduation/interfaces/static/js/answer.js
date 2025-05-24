@@ -219,19 +219,21 @@ document.addEventListener("DOMContentLoaded", function () {
             fetch('api/analyze_answers', {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': csrfToken // Добавляем CSRF-токен в заголовок
-                    // Не указываем 'Content-Type', так как браузер сам установит его для FormData
+                    'X-CSRFToken': csrfToken
                 },
                 body: formData
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                if (response.redirected) {
+                    window.location.href = response.url;  // <--- Вот ключ
+                } else {
+                    return response.json();
                 }
-                return response.json();
             })
             .then(data => {
-                console.log('Данные успешно отправлены:', data);
+                if (data?.error) {
+                    alert("Ошибка анализа: " + data.error);
+                }
             })
             .catch(error => {
                 console.error('Ошибка при отправке данных:', error);

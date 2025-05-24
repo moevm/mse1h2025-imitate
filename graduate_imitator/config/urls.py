@@ -56,6 +56,7 @@ urlpatterns = [
     path('profile', ProfileWebView.as_view(), name='web-profile'),
     path('protection', ProtectionWebView.as_view(), name='web-protection'),
     path('answer', AnswerWebView.as_view(), name='web-answer'),
+    path('results', ResultsWebView.as_view(), name='web-results'),
     
     #Swagger
     path('api/schema', SpectacularAPIView.as_view(), name='schema'),

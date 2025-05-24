@@ -54,7 +54,6 @@ class AnalyzeUserAnswers(APIView):
             text = audio_parser.transcribe_audio(samples, language="ru")
             responses.append({"file": key, "text": text})
 
-
         response_delays = []
         response_durations = []
         question_ids = []
@@ -84,7 +83,6 @@ class AnalyzeUserAnswers(APIView):
             response_durations.append(responseDuration)
             question_ids.append(question_id)
 
-
         keywords = [QuestionRepository.get_answer_keywords_by_id(question_id) for question_id in question_ids]
         keywords_percentage = []
         for i, item in enumerate(responses):
@@ -94,18 +92,26 @@ class AnalyzeUserAnswers(APIView):
             keywords_percentage.append(c / len(keywords[i]) if len(keywords[i]) != 0 else 1)
         keywords_percentage = sum(keywords_percentage) / len(keywords_percentage) * 100
 
-
         delay_percentage = sum(response_delays) / len(response_delays) * 100
         duration_percentage = sum(response_durations) / len(response_durations) * 100
         overall_percentage = (keywords_percentage + delay_percentage + duration_percentage) / 3
 
-        return Response(
-            {"overall": overall_percentage,
-             "keywords_percentage": keywords_percentage,
-             "delay_percentage": delay_percentage,
-             "duration_percentage": duration_percentage},
-            status=status.HTTP_200_OK
-        )
+        # return Response(
+        #     {"overall": overall_percentage,
+        #      "keywords_percentage": keywords_percentage,
+        #      "delay_percentage": delay_percentage,
+        #      "duration_percentage": duration_percentage},
+        #     status=status.HTTP_200_OK
+        # )
+
+        results = {"overall": overall_percentage,
+                   "keywords_percentage": keywords_percentage,
+                   "delay_percentage": delay_percentage,
+                   "duration_percentage": duration_percentage}
+        request.session['results'] = results
+
+        # Перенаправление на страницу анализа
+        return redirect('web-results')
 
     def get(self, request):
         return Response(

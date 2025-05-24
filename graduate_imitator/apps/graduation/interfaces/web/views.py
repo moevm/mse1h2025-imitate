@@ -108,3 +108,20 @@ class AnswerWebView(View):
             }
 
         return render(request, "protection/answer.html", context)
+
+
+class ResultsWebView(View):
+    # def get(self, request):
+    #     return redirect("web-protection")  # если напрямую зашёл
+
+    def get(self, request):
+        try:
+            results = loads(request.POST.get("results", "{}}"))
+        except JSONDecodeError:
+            results = {}
+
+        context = {
+                'results': results,
+            }
+
+        return render(request, "protection/results.html", context)
