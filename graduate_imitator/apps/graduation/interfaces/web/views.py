@@ -97,20 +97,33 @@ class AnswerWebView(View):
 
     def post(self, request):
         context = {}
+        print(f"[AnswerWebView] Received POST data: {request.POST}")
         try:
             questions = loads(request.POST.get("questions", "[]"))
             speaker_info = loads(request.POST.get("speakerInfo", "{}"))
+            presentation_id = request.POST.get("presentation_id")
+            print(f"[AnswerWebView] Extracted presentation_id: {presentation_id}")
         except JSONDecodeError:
             questions = []
             speaker_info = {}
+            presentation_id = None
+        except Exception as e:
+            print(f"Error retrieving POST data in AnswerWebView: {e}")
+            questions = []
+            speaker_info = {}
+            presentation_id = None
 
         print(EffectBase.__subclasses__())
 
         context = {
                 'questions': questions,
                 'speakerInfo': speaker_info,
-                'effects': EffectBase.__subclasses__()
+                'effects': EffectBase.__subclasses__(),
+                'presentation_id': presentation_id,
         }
+
+        if presentation_id is None:
+            print("Warning: presentation_id was not found in POST request to AnswerWebView")
 
         return render(request, "protection/answer.html", context)
 

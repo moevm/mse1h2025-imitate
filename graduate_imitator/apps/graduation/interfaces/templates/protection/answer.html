@@ -66,9 +66,17 @@
     </div>
 </div>
 
+{{ questions|json_script:"questions-data" }}
+{{ speakerInfo|json_script:"speakerInfo-data" }}
+
 <script>
-    const questions = {{ questions|safe }};
-    const speakerInfo = {{ speakerInfo|safe }};
+    const questions = JSON.parse(document.getElementById('questions-data').textContent);
+    const speakerInfo = JSON.parse(document.getElementById('speakerInfo-data').textContent);
+    const currentPresentationId = {{ presentation_id|default:"null" }}; // presentation_id is likely a simple type or null
+
+    console.log('[protection/answer.html] Questions:', questions);
+    console.log('[protection/answer.html] Speaker Info:', speakerInfo);
+    console.log('[protection/answer.html] currentPresentationId initialized to:', currentPresentationId);
 </script>
 <script src="{% static 'js/answer.js' %}"></script>
 
