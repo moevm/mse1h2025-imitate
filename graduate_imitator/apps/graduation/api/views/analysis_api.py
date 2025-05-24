@@ -22,63 +22,71 @@ audio_parser = SpeechToTextService()
 class AnalyzeUserAnswers(APIView):
     def post(self, request):
         # todo: не работает расшифровка текста нормально (speech_to_text_service.py), тут написано только вычленение слов, нужно дописать вычленение ключевых и подсчёт процента использования ключевых
-        # responses = []
-        # # Перебираем все загруженные файлы
-        # for key in request.FILES:
-        #     file = request.FILES[key]
-        #
-        #     # Используем pydub для чтения аудиофайла
-        #     audio_segment = AudioSegment.from_file(file)
-        #     wav_file = io.BytesIO()
-        #     audio_segment.export(wav_file, format="wav")
-        #     wav_file.seek(0)
-        #     # Преобразуем в numpy массив
-        #     audio_data = np.array(audio_segment.get_array_of_samples(), dtype=np.float32)
-        #
-        #     # Если аудио стерео, преобразуем в моно, усредняя каналы
-        #     if audio_segment.channels == 2:
-        #         audio_data = audio_data.reshape((-1, 2)).mean(axis=1)
-        #
-        #     # Нормализуем аудиоданные в диапазоне [-1.0, 1.0]
-        #     audio_data /= np.max(np.abs(audio_data))
-        #
-        #     # Транскрибируем аудио
-        #     text = audio_parser.transcribe_audio(audio_data, "ru")
-        #     responses.append({"file": key, "text": text})
+        responses = []
+        # Перебираем все загруженные файлы
+        for key in request.FILES:
+            file = request.FILES[key]
 
-        response_delays = []
-        response_durations = []
-        length = request.POST.get("length")
-        try:
-            length = int(length)
-        except Exception as e:
-            return Response(
-                {"error": f"Не удалось int(length): {e}"}
-            )
+            # Используем pydub для чтения аудиофайла
+            audio_segment = AudioSegment.from_file(file)
 
-        for i in range(length):
-            # question_id = request.POST.get("answers[${index}][question_id]")
-            responseDelay = request.POST.get(f"answers[{i}][responseDelay]")
-            responseDuration = request.POST.get(f"answers[{i}][responseDuration]")
-            try:
-                responseDelay = float(responseDelay) if responseDelay and responseDelay != "null" else 0
-                responseDuration = float(responseDuration) if responseDuration and responseDuration != "null" else 0
-            except Exception as e:
-                return Response(
-                    {"error": f"Не удалось float(штука): {e}, {responseDelay}, {responseDuration}"}
-                )
-            responseDelay = min(responseDelay / 5, 1)
-            responseDuration = min(responseDuration / 15, 1)
-            response_delays.append(responseDelay)
-            response_durations.append(responseDuration)
+            # Ensure the audio is mono
+            if audio_segment.channels > 1:
+                audio_segment = audio_segment.set_channels(1)
 
-        delay_percentage = sum(response_delays) / len(response_delays) * 100
-        duration_percentage = sum(response_durations) / len(response_durations) * 100
+            # Resample to 16kHz as Whisper expects this for direct array input
+            WHISPER_SAMPLE_RATE = 16000
+            if audio_segment.frame_rate != WHISPER_SAMPLE_RATE:
+                audio_segment = audio_segment.set_frame_rate(WHISPER_SAMPLE_RATE)
+
+            # Ensure 16-bit sample width for consistent normalization
+            # Whisper's reference normalization is for 16-bit audio ( / 32768.0)
+            if audio_segment.sample_width != 2:  # 2 bytes = 16 bits
+                audio_segment = audio_segment.set_sample_width(2)
+
+            # Convert to float32 numpy array
+            samples = np.array(audio_segment.get_array_of_samples()).astype(np.float32)
+            # Normalize to [-1.0, 1.0] for 16-bit audio
+            samples /= 32768.0
+
+            # Transcribe audio (sample_rate parameter is removed from transcribe_audio)
+            text = audio_parser.transcribe_audio(samples, language="ru")
+            responses.append({"file": key, "text": text})
+
+        # response_delays = []
+        # response_durations = []
+        # length = request.POST.get("length")
+        # try:
+        #     length = int(length)
+        # except Exception as e:
+        #     return Response(
+        #         {"error": f"Не удалось int(length): {e}"}
+        #     )
+        #
+        # for i in range(length):
+        #     # question_id = request.POST.get("answers[${index}][question_id]")
+        #     responseDelay = request.POST.get(f"answers[{i}][responseDelay]")
+        #     responseDuration = request.POST.get(f"answers[{i}][responseDuration]")
+        #     try:
+        #         responseDelay = float(responseDelay) if responseDelay and responseDelay != "null" else 0
+        #         responseDuration = float(responseDuration) if responseDuration and responseDuration != "null" else 0
+        #     except Exception as e:
+        #         return Response(
+        #             {"error": f"Не удалось float(штука): {e}, {responseDelay}, {responseDuration}"}
+        #         )
+        #     responseDelay = min(responseDelay / 5, 1)
+        #     responseDuration = min(responseDuration / 15, 1)
+        #     response_delays.append(responseDelay)
+        #     response_durations.append(responseDuration)
+        #
+        # delay_percentage = sum(response_delays) / len(response_delays) * 100
+        # duration_percentage = sum(response_durations) / len(response_durations) * 100
 
         return Response(
-            {"keywords_percentage": 0,
-             "delay_percentage": delay_percentage,
-             "duration_percentage": duration_percentage},
+            {"debug": responses,
+             "keywords_percentage": 0,
+             "delay_percentage": 11,
+             "duration_percentage": 1},
             status=status.HTTP_200_OK
         )
 
