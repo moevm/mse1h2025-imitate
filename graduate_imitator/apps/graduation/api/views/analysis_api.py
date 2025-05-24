@@ -16,12 +16,13 @@ import numpy as np
 import json
 from graduate_imitator.apps.graduation.domain.repositories.question_repository import *
 from graduate_imitator.apps.graduation.domain.services.speech_to_text_service import *
+from graduate_imitator.apps.graduation.domain.repositories.question_repository import QuestionRepository
 
 audio_parser = SpeechToTextService()
 
+
 class AnalyzeUserAnswers(APIView):
     def post(self, request):
-        # todo: не работает расшифровка текста нормально (speech_to_text_service.py), тут написано только вычленение слов, нужно дописать вычленение ключевых и подсчёт процента использования ключевых
         responses = []
         # Перебираем все загруженные файлы
         for key in request.FILES:
@@ -53,40 +54,56 @@ class AnalyzeUserAnswers(APIView):
             text = audio_parser.transcribe_audio(samples, language="ru")
             responses.append({"file": key, "text": text})
 
-        # response_delays = []
-        # response_durations = []
-        # length = request.POST.get("length")
-        # try:
-        #     length = int(length)
-        # except Exception as e:
-        #     return Response(
-        #         {"error": f"Не удалось int(length): {e}"}
-        #     )
-        #
-        # for i in range(length):
-        #     # question_id = request.POST.get("answers[${index}][question_id]")
-        #     responseDelay = request.POST.get(f"answers[{i}][responseDelay]")
-        #     responseDuration = request.POST.get(f"answers[{i}][responseDuration]")
-        #     try:
-        #         responseDelay = float(responseDelay) if responseDelay and responseDelay != "null" else 0
-        #         responseDuration = float(responseDuration) if responseDuration and responseDuration != "null" else 0
-        #     except Exception as e:
-        #         return Response(
-        #             {"error": f"Не удалось float(штука): {e}, {responseDelay}, {responseDuration}"}
-        #         )
-        #     responseDelay = min(responseDelay / 5, 1)
-        #     responseDuration = min(responseDuration / 15, 1)
-        #     response_delays.append(responseDelay)
-        #     response_durations.append(responseDuration)
-        #
-        # delay_percentage = sum(response_delays) / len(response_delays) * 100
-        # duration_percentage = sum(response_durations) / len(response_durations) * 100
+
+        response_delays = []
+        response_durations = []
+        question_ids = []
+        length = request.POST.get("length")
+        try:
+            length = int(length)
+        except Exception as e:
+            return Response(
+                {"error": f"Не удалось int(length): {e}"}
+            )
+
+        for i in range(length):
+            question_id = request.POST.get(f"answers[{i}][question_id]")
+            responseDelay = request.POST.get(f"answers[{i}][responseDelay]")
+            responseDuration = request.POST.get(f"answers[{i}][responseDuration]")
+            try:
+                responseDelay = float(responseDelay) if responseDelay and responseDelay != "null" else 0
+                responseDuration = float(responseDuration) if responseDuration and responseDuration != "null" else 0
+                question_id = int(question_id) if question_id and question_id != "null" else -1
+            except Exception as e:
+                return Response(
+                    {"error": f"Не удалось float(штука): {e}, {responseDelay}, {responseDuration}"}
+                )
+            responseDelay = min(responseDelay / 5, 1)
+            responseDuration = min(responseDuration / 15, 1)
+            response_delays.append(responseDelay)
+            response_durations.append(responseDuration)
+            question_ids.append(question_id)
+
+
+        keywords = [QuestionRepository.get_answer_keywords_by_id(question_id) for question_id in question_ids]
+        keywords_percentage = []
+        for i, item in enumerate(responses):
+            item = [''.join(e for e in x if e.isalnum() or e in "-") for x in
+                    item["text"].strip().split()]  # убираем всю фигню из текста
+            c = sum([keyword in item for keyword in keywords[i]])
+            keywords_percentage.append(c / len(keywords[i]) if len(keywords[i]) != 0 else 1)
+        keywords_percentage = sum(keywords_percentage) / len(keywords_percentage) * 100
+
+
+        delay_percentage = sum(response_delays) / len(response_delays) * 100
+        duration_percentage = sum(response_durations) / len(response_durations) * 100
+        overall_percentage = (keywords_percentage + delay_percentage + duration_percentage) / 3
 
         return Response(
-            {"debug": responses,
-             "keywords_percentage": 0,
-             "delay_percentage": 11,
-             "duration_percentage": 1},
+            {"overall": overall_percentage,
+             "keywords_percentage": keywords_percentage,
+             "delay_percentage": delay_percentage,
+             "duration_percentage": duration_percentage},
             status=status.HTTP_200_OK
         )
 

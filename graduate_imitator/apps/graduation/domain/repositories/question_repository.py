@@ -20,3 +20,11 @@ class QuestionRepository:
             return Question.objects.none()  # Возвращаем пустой QuerySet, если нет ключевых слов
         query = reduce(and_, (Q(keywords__contains=kw) for kw in keywords))  # через reduce и убрали квадратные скобки
         return Question.objects.filter(query)
+
+    @staticmethod
+    def get_answer_keywords_by_id(question_id):
+        try:
+            question = Question.objects.get(id=question_id)
+            return question.answer_keywords
+        except Question.DoesNotExist:
+            return []  # Возвращаем None, если вопрос с таким ID не найден

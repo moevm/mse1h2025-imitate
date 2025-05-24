@@ -203,7 +203,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(answersData);
 
             answersData.forEach((answer, index) => {
-//                console.log('Adding answer:', answer); // Логируем ответ перед добавлением
 
                 formData.append(`answers[${index}][question_id]`, answer.question_id);
                 formData.append(`answers[${index}][responseDelay]`, answer.responseDelay);
@@ -213,10 +212,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             formData.append(`length`, answersData.length)
 
-//            // Логируем содержимое formData
-//            for (let [key, value] of formData.entries()) {
-//                console.log(key, value);
-//            }
             console.log(formData);
 
             const csrfToken = getCookie('csrftoken'); // Получаем CSRF-токен
