@@ -5,16 +5,18 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-COPY requirements.txt .
-
 RUN apt-get update && \
-    apt-get install -y ffmpeg gcc && \
+    apt-get install -y --no-install-recommends ffmpeg gcc && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip && \
-    pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt && \
-    pip cache purge
+RUN pip install --no-cache-dir --upgrade pip wheel setuptools
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir --only-binary=:all: numpy==1.26.4 spacy==3.8.5
+
+RUN pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
 
 COPY . .
 
