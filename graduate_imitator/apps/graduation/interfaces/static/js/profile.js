@@ -47,4 +47,28 @@ function getCookie(name) {
     return cookieValue;
 }
 
-window.addEventListener('DOMContentLoaded', loadResults);
+window.addEventListener('DOMContentLoaded', () => {
+    loadResults();
+
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                const csrftoken = getCookie('csrftoken');
+                const response = await fetch('api/users/logout', {
+                    method: 'GET', credentials: 'include'
+                });
+                if (response.ok) {
+                    window.location.href = '/login';
+                } else {
+                    const err = await response.json();
+                    console.error('Ошибка при выходе:', err);
+                    alert('Не удалось выйти. Попробуйте ещё раз.');
+                }
+            } catch (e) {
+                console.error('Сетевая ошибка при выходе:', e);
+                alert('Не удалось соединиться с сервером.');
+            }
+        });
+    }
+});
